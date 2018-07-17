@@ -7,47 +7,47 @@
     <groupId>com.qieshu</groupId>
     <artifactId>qieshu-sdk</artifactId>
     <version>1.0</version>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <!--<build>-->
+        <!--<plugins>-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-compiler-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--<source>1.8</source>-->
+                    <!--<target>1.8</target>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
+    <!--</build>-->
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
         <version>7</version>
     </parent>
 
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+    <!--<licenses>-->
+        <!--<license>-->
+            <!--<name>The Apache Software License, Version 2.0</name>-->
+            <!--<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>-->
+            <!--<distribution>repo</distribution>-->
+        <!--</license>-->
+    <!--</licenses>-->
 
-    <scm>
-        <url> https://github.com/haoboyang/qieshu</url>
-        <connection>https://github.com/haoboyang/qieshu.git</connection>
-        <developerConnection>https://github.com/haoboyang/qieshu</developerConnection>
-    </scm>
-    <!--写你自己的，这只是个例子-->
-    <developers>
-        <developer>
-            <name>17621850275</name>
-            <email>y_hbmail@163.com</email>
-            <url>https://github.com/haoboyang/qieshu.git</url>
-            <timezone>+8</timezone>
-        </developer>
+    <!--<scm>-->
+        <!--<url> https://github.com/haoboyang/qieshu</url>-->
+        <!--<connection>https://github.com/haoboyang/qieshu.git</connection>-->
+        <!--<developerConnection>https://github.com/haoboyang/qieshu</developerConnection>-->
+    <!--</scm>-->
+    <!--&lt;!&ndash;写你自己的，这只是个例子&ndash;&gt;-->
+    <!--<developers>-->
+        <!--<developer>-->
+            <!--<name>17621850275</name>-->
+            <!--<email>y_hbmail@163.com</email>-->
+            <!--<url>https://github.com/haoboyang/qieshu.git</url>-->
+            <!--<timezone>+8</timezone>-->
+        <!--</developer>-->
 
-    </developers>
+    <!--</developers>-->
 
     <dependencies>
 
@@ -85,5 +85,76 @@
         </dependency>
 
     </dependencies>
+
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!--指定编译器版本-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                    </configuration>
+                </plugin>
+                <!--打包源码-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!--打包文档注释-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.10.3</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!--gpg加密-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.6</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!--指定上传仓库-->
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>1.6.3</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <serverId>ossrh</serverId>
+                        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                        <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
 </project>
