@@ -115,12 +115,12 @@
 
     <profiles>
         <profile>
-            <id>release</id>
+            <id>disable-javadoc-doclint</id>
             <activation>
                 <jdk>[1.8,)</jdk>
             </activation>
             <properties>
-                <javadoc.opts>-Xdoclint:none</javadoc.opts>
+                <additionalparam>-Xdoclint:none</additionalparam>
             </properties>
             <build>
                 <plugins>
@@ -143,10 +143,13 @@
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <executions>
                             <execution>
-                                <phase>package</phase>
+                                <id>attach-javadocs</id>
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
+                                <configuration>
+                                    <additionalparam>1.8</additionalparam>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
