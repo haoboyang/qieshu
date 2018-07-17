@@ -33,6 +33,22 @@
         </license>
     </licenses>
 
+    <scm>
+        <url> https://github.com/haoboyang/qieshu</url>
+        <connection>https://github.com/haoboyang/qieshu.git</connection>
+        <developerConnection>https://github.com/haoboyang/qieshu</developerConnection>
+    </scm>
+    <!--写你自己的，这只是个例子-->
+    <developers>
+        <developer>
+            <name>17621850275</name>
+            <email>y_hbmail@163.com</email>
+            <url>https://github.com/haoboyang/qieshu.git</url>
+            <timezone>+8</timezone>
+        </developer>
+
+    </developers>
+
     <dependencies>
 
 
