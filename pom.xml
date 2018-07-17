@@ -8,6 +8,8 @@
     <artifactId>qieshu-sdk</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
+    <name>qieshu</name>
+    <description>this is qieshu openapi sdk</description>
     <url>https://github.com/haoboyang/qieshu</url>
 
 
