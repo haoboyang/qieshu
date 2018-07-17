@@ -7,41 +7,12 @@
     <groupId>com.qieshu</groupId>
     <artifactId>qieshu-sdk</artifactId>
     <version>1.0</version>
-    <packaging>jar</packaging>
-    <url>https://github.com/haoboyang/qieshu</url>
-
-    <developers>
-        <developer>
-            <name>haoboyang</name>
-            <email>y_hbmail@163.com</email>
-        </developer>
-    </developers>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
         <version>7</version>
     </parent>
-
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <scm>
-        <connection>
-            scm:git:https://github.com/haoboyang/qieshu.git
-        </connection>
-        <developerConnection>
-            scm:git:https://github.com/haoboyang/qieshu.git
-        </developerConnection>
-        <url>https://github.com/haoboyang/qieshu</url>
-    </scm>
-
-
 
     <build>
         <pluginManagement>
@@ -50,11 +21,9 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-
                     <configuration>
                         <source>1.8</source>
                         <target>1.8</target>
-
                     </configuration>
                 </plugin>
                 <!--打包源码-->
@@ -117,8 +86,6 @@
             </plugins>
         </pluginManagement>
     </build>
-
-
 
     <dependencies>
 
