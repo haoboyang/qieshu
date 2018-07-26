@@ -2,7 +2,6 @@ package com.buyfull.openapiv1.implement;
 
 import com.buyfull.openapiv1.BFPage;
 import org.json.JSONException;
-
 import java.util.List;
 
 /**

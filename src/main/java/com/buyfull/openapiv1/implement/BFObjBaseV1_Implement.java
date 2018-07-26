@@ -2,8 +2,6 @@ package com.buyfull.openapiv1.implement;
 
 import java.lang.ref.WeakReference;
 import java.text.ParseException;
-import java.util.Date;
-
 import com.buyfull.openapiv1.BFException;
 import com.buyfull.openapiv1.BFObjBaseV1;
 import com.buyfull.openapiv1.BFOpenAPI;

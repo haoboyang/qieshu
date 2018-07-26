@@ -1,22 +1,15 @@
 package com.buyfull.openapiv1.implement;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.buyfull.openapiv1.*;
-
-
 import com.buyfull.util.PageParam;
 import com.buyfull.util.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-
-import static com.buyfull.openapiv1.BFOpenAPIManager.ROOT_URL;
 import static com.buyfull.openapiv1.BFOpenAPIManager.createBFOpenAPInstance;
 import static com.buyfull.util.SignAndSend.sandPost;
 import static com.buyfull.util.SignAndSend.sandGet;
@@ -25,11 +18,12 @@ import static com.buyfull.util.UriPathUtil.*;
 public class BFOpenAPI_Implement implements BFOpenAPI{
 	String accessKey;
 	String secretKey;
+    String rootUrl;
 
-	public BFOpenAPI_Implement(String accessKey, String secretKey){
+	public BFOpenAPI_Implement(String accessKey, String secretKey,String rootUrl){
 		this.accessKey = accessKey;
 		this.secretKey = secretKey;
-
+		this.rootUrl   = rootUrl ;
 	}
 	
 	public void destory(){
@@ -47,6 +41,11 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 		return secretKey;
 	}
 
+	@Override
+	public String rootUrl() {
+		return rootUrl;
+	}
+
 	/**
 	 *
 	 * 获取用户 app 列表default pagNum =1, limit =20
@@ -54,18 +53,12 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 	 * @throws BFException
 	 */
 	public BFPage<? extends BFApp> getAppList(int pageNum, int limit) throws BFException, ParseException {
-		StringBuilder  urlBuild = new StringBuilder( ROOT_URL + APP_LIST);
+		StringBuilder  urlBuild = new StringBuilder( rootUrl + APP_LIST);
 		if( pageNum != 0 && limit != 0){
 			urlBuild.append("?pageNum=" + pageNum);
 			urlBuild.append("&limit=" + limit ) ;
 		}
 
-//		Request request = new Request.Builder()
-//				         .url(url)
-//				         .cacheControl(CacheControl.FORCE_NETWORK) //only user network
-//						 .build();
-		// Call call = getHttpClient().newCall(request);
-		//JSONObject data = JsonUtil.getDataObj(url, call);
 		//通过网关转发请求数据
 		String result = sandGet( urlBuild.toString().trim() , this.accessKey , this.secretKey , GET   ) ;
 
@@ -91,7 +84,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 
 	@Override
 	public BFPage<String> getAuthAppKeys(int pageNum, int limit) throws BFException {
-		StringBuilder  urlBuild = new StringBuilder( ROOT_URL + SENCE_ENPOWER_APP_LISTVO );
+		StringBuilder  urlBuild = new StringBuilder( rootUrl + SENCE_ENPOWER_APP_LISTVO );
 		urlBuild.append("?pageNum=" + pageNum);
 		urlBuild.append("&limit=" + limit ) ;
 		String result = sandGet( urlBuild.toString().trim() , this.accessKey , this.secretKey , GET   ) ;
@@ -117,7 +110,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 			throw new BFException(BFException.ERRORS.INVALID_WORK, "获取列表最大数为"+MAXLIMIT);
 		if( StringUtils.isNullOrEmpty( appKey ) || appKey.trim().length()!=32  )
             throw new BFException(BFException.ERRORS.INVALID_UUID, " request appKey can't be blank");
-        StringBuilder   urlBuild = new StringBuilder( ROOT_URL + SENCE_ENPOWER_APP_SENCELIST);
+        StringBuilder   urlBuild = new StringBuilder( rootUrl + SENCE_ENPOWER_APP_SENCELIST);
 						urlBuild.append("?pageNum=" + pageNum);
 						urlBuild.append("&limit=" + limit ) ;
 						urlBuild.append("&appKey=" + appKey ) ;
@@ -164,7 +157,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 	 */
 	public BFPage<? extends BFScene> findScenesByKeyword(String name, String brand, String address, int pageNum,
                                                          int limit) throws BFException, ParseException {
-		StringBuilder  urlBuild = new StringBuilder( ROOT_URL + SENCE_LIST);
+		StringBuilder  urlBuild = new StringBuilder( rootUrl + SENCE_LIST);
 			urlBuild.append("?pageNum=" + pageNum);
 			urlBuild.append("&limit=" + limit ) ;
 
@@ -229,7 +222,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
             senceEntity.put("province", province);
             senceEntity.put("city", city);
             senceEntity.put("brand", brand);
-            String url = ROOT_URL + SENCE_CREATE ;
+            String url = rootUrl + SENCE_CREATE ;
 
             String req =  sandPost( url , accessKey ,secretKey ,senceEntity.toString() ,POST) ;
 
@@ -261,7 +254,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
             throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid can't be blank");
         }
         try {
-            String resUrl = ROOT_URL + SENCE_DELETE + scence.uuid() + "/" + scence.lastUpdateTime() ;
+            String resUrl = rootUrl + SENCE_DELETE + scence.uuid() + "/" + scence.lastUpdateTime() ;
             String  req = sandGet( resUrl , accessKey ,secretKey , DELETE  ) ;
             JSONObject reqResult = new JSONObject( req  ) ;
             if( reqResult.getString(CODE).equals(OK)  ){
@@ -315,7 +308,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
             throws BFException, ParseException {
 		if(limit > MAXLIMIT)
 			throw new BFException(BFException.ERRORS.DELETE_ERROR,  " findInstallSiteByDeviceInfo max limit is " + MAXLIMIT );
-        StringBuilder   urlBuild = new StringBuilder( ROOT_URL + INSTALLSITE_LIST);
+        StringBuilder   urlBuild = new StringBuilder( rootUrl + INSTALLSITE_LIST);
                         urlBuild.append("?pageNum=" + pageNum);
                         urlBuild.append("&limit=" + limit ) ;
                         if( !StringUtils.isNullOrEmpty(  deviceSN ) ){
@@ -396,7 +389,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 						//post 创建 app
 
 
-						String url = ROOT_URL + APP_CREATE ;
+						String url = rootUrl + APP_CREATE ;
 
 						String req =  sandPost( url , accessKey ,secretKey ,creeateApp.toString(),POST ) ;
 
@@ -434,7 +427,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 
 		  if( StringUtils.isNullOrEmpty( app.getAppKey().trim() ) || app.getAppKey().trim().length()!=32)
 			  throw new BFException(BFException.ERRORS.INVALID_UUID, "appKey 不存在");
-		  String  url =  ROOT_URL + APP_DELETE + app.getAppKey() + "/" + String.valueOf(app.getLastUpdateTime()) ;
+		  String  url =  rootUrl + APP_DELETE + app.getAppKey() + "/" + String.valueOf(app.getLastUpdateTime()) ;
 		  String  req = sandGet( url , accessKey ,secretKey , DELETE  ) ;
 		  JSONObject reqResult = new JSONObject( req  ) ;
 		  if( reqResult.getString(CODE).equals(OK)  ){
@@ -454,7 +447,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 		try {
 		if (StringUtils.isNullOrEmpty(appKey.trim()) || appKey.trim().length() != 32)
 			throw new BFException(BFException.ERRORS.INVALID_UUID, "appKey不存在");
-		String url = ROOT_URL + SENCE_ENPOWER_APP_REMOVE + appKey;
+		String url = rootUrl + SENCE_ENPOWER_APP_REMOVE + appKey;
 		String req = sandGet(url, accessKey, secretKey, DELETE);
 		System.out.println("删除炒作结果 == " + req);
 		JSONObject reqResult = null;
@@ -479,7 +472,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 			if(  StringUtils.isNullOrEmpty(  senceId.trim() ) ||  senceId.trim().length()!= 32 ){
 				throw new BFException(BFException.ERRORS.INVALID_UUID, "请求参数格式错误");
 			}
-			String url = ROOT_URL + SENCE_ENPOWER_INSTALL_LIST + senceId;
+			String url = rootUrl + SENCE_ENPOWER_INSTALL_LIST + senceId;
 			String req = sandGet(url, accessKey, secretKey, GET);
 			JSONObject reqResult = null;
 

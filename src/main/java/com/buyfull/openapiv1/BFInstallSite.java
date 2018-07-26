@@ -2,7 +2,6 @@ package com.buyfull.openapiv1;
 
 
 import org.json.JSONException;
-
 import java.text.ParseException;
 
 /**

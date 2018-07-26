@@ -7,10 +7,7 @@ import com.buyfull.util.SignAndSend;
 import com.buyfull.util.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.ParseException;
-
-import static com.buyfull.openapiv1.BFOpenAPIManager.ROOT_URL;
 import static com.buyfull.util.StringUtils.isInteger;
 import static com.buyfull.util.UriPathUtil.*;
 import static com.buyfull.util.UriPathUtil.DATA;
@@ -84,7 +81,7 @@ public class BFInstallSite_Implement extends BFObjBaseV1_Implement implements BF
 		BFOpenAPI_Implement api = (BFOpenAPI_Implement) getContext();
 
 		try {
-			String url = ROOT_URL + INSTALLSITE_INFO + uuid ;
+			String url = getContext().rootUrl() + INSTALLSITE_INFO + uuid ;
 			String req = SignAndSend.sandGet( url ,api.accessKey ,api.secretKey ,GET   ) ;
 			JSONObject result = new JSONObject( req ) ;
 
@@ -153,7 +150,7 @@ public class BFInstallSite_Implement extends BFObjBaseV1_Implement implements BF
 			data.put("seriaNo",deviceSN);
 			data.put("lastUpdateTiem",this.lastUpdateTimeStamp);
 			BFOpenAPI_Implement api = (BFOpenAPI_Implement) getContext();
-			String url = ROOT_URL + INSTALLSITE_BOUND;
+			String url = getContext().rootUrl() + INSTALLSITE_BOUND;
 			String req = SignAndSend.sandPost(url , api.accessKey , api.secretKey ,data.toString() ,PUT) ;
 		try {
 			JSONObject reqResult = new JSONObject( req ) ;
@@ -178,7 +175,7 @@ public class BFInstallSite_Implement extends BFObjBaseV1_Implement implements BF
 	 */
 	public boolean unbindDeviceSN() throws BFException, ParseException {
 		BFOpenAPI_Implement api = (BFOpenAPI_Implement) getContext();
-		String url = ROOT_URL + INSTALLSITE_UNBOUND + uuid + "/" + String.valueOf(lastUpdateTime() );
+		String url = getContext().rootUrl() + INSTALLSITE_UNBOUND + uuid + "/" + String.valueOf(lastUpdateTime() );
 		String req = SignAndSend.sandGet(url , api.accessKey , api.secretKey , PUT) ;
 		try {
 			JSONObject reqResult = new JSONObject( req ) ;

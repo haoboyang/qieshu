@@ -4,7 +4,6 @@ import com.buyfull.openapiv1.BFApp;
 import com.buyfull.openapiv1.BFPage;
 import com.buyfull.openapiv1.implement.BFApp_Implement;
 import org.json.JSONException;
-
 import java.util.List;
 
 /**

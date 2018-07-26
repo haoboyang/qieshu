@@ -4,12 +4,9 @@ package com.buyfull.util;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import com.buyfull.openapiv1.BFException;
-
 import okhttp3.Call;
 import okhttp3.Response;
-
 import java.io.IOException;
 
 public class JsonUtil {

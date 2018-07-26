@@ -1,7 +1,5 @@
 package com.buyfull.util;
 
-import org.json.JSONObject;
-
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedReader;
@@ -13,9 +11,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-
 import static com.buyfull.util.TimeUtile.getGMTTime;
 import static com.buyfull.util.UriPathUtil.DELETE;
 import static com.buyfull.util.UriPathUtil.POST;

@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.buyfull.openapiv1.BFException;
 import com.buyfull.openapiv1.BFInstallSite;
 import com.buyfull.openapiv1.BFPage;
@@ -18,8 +16,6 @@ import com.buyfull.util.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import static com.buyfull.openapiv1.BFOpenAPIManager.ROOT_URL;
 import static com.buyfull.util.SignAndSend.sandPost;
 import static com.buyfull.util.SignAndSend.sandGet;
 import static com.buyfull.util.TimeUtile.getDateStr;
@@ -101,7 +97,7 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 		isValid();
 
 		try {
-			String url = ROOT_URL + SENCE_INFO + uuid ;
+			String url = getContext().rootUrl() + SENCE_INFO + uuid ;
 			String req = SignAndSend.sandGet( url ,getContext().accessKey() ,getContext().secretKey() ,GET   ) ;
 			JSONObject result = new JSONObject( req ) ;
 
@@ -154,7 +150,7 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 			senceEntity.put("city",getCity());
 			senceEntity.put("brand", getBrand());
 			senceEntity.put("lastupdateTime", String.valueOf(lastUpdateTime() )) ;
-            String url = ROOT_URL + SENCE_UPDATE ;
+            String url = getContext().rootUrl() + SENCE_UPDATE ;
 
 			String req =  sandPost( url , getContext().accessKey() ,getContext().secretKey() ,senceEntity.toString() ,PUT) ;
 
@@ -207,7 +203,7 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 		JSONObject   reqResult= null ;
 		try {
 
-			String url  = ROOT_URL + SENCE_GENERATE_BOUNDCODE + uuid + "/" + lastUpdateTimeStamp ;
+			String url  = getContext().rootUrl() + SENCE_GENERATE_BOUNDCODE + uuid + "/" + lastUpdateTimeStamp ;
 			String req = SignAndSend.sandGet( url ,getContext().accessKey() ,getContext().secretKey() ,PUT  ) ;
 			             reqResult = new JSONObject( req  ) ;
 			if( reqResult.getString(CODE).equals(OK) ){
@@ -233,7 +229,7 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 		if( !isValid() ){
 			throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid can't be blank");
 		}
-		String url  = ROOT_URL + SENCE_DEVICE_LIST + uuid ;
+		String url  = getContext().rootUrl() + SENCE_DEVICE_LIST + uuid ;
 		String req  = SignAndSend.sandGet( url , getContext().accessKey() ,getContext().secretKey() ,GET  ) ;
 		try {
 
@@ -292,7 +288,7 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 			throw new BFException(BFException.ERRORS.INVALID_WORK, " 设备安装位置不能为空且最大批量数为"+MAXLIMIT);
 		}
 
-        String url  = ROOT_URL  + INSTALLSITE_CREATEBEACH ;
+        String url  = getContext().rootUrl()  + INSTALLSITE_CREATEBEACH ;
 		try {
 			installDescrptionList.forEach((k,v)->{
 				if(  v == null )
@@ -366,7 +362,7 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
         } catch (JSONException e) {
             throw new BFException(BFException.ERRORS.INVALID_JSON, e.getMessage() );
         }
-        String url = ROOT_URL + SENCE_REMOVE_INSRALL ;
+        String url = getContext().rootUrl() + SENCE_REMOVE_INSRALL ;
         String req = SignAndSend.sandPost( url , getContext().accessKey() ,getContext().secretKey(), data.toString(), POST   ) ;
         try {
             JSONObject reqResult = new JSONObject( req ) ;
@@ -402,7 +398,7 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 		if( limit > MAXLIMIT){
 			throw new BFException(BFException.ERRORS.INVALID_WORK, "获取授权列表最大数为"+MAXLIMIT);
 		}
-		StringBuilder   urlBuild  =  new StringBuilder( ROOT_URL + SENCE_ENPOWER_APP_LIST)  ;
+		StringBuilder   urlBuild  =  new StringBuilder( getContext().rootUrl() + SENCE_ENPOWER_APP_LIST)  ;
 						urlBuild.append("?pageNum=" + pageNum);
 						urlBuild.append("&limit=" + limit ) ;
 						urlBuild.append("&senceUuid=" + uuid ) ;
@@ -460,7 +456,7 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 			senceEntity.put("senceId", senceId);
 			senceEntity.put("appBackupName", backupName);
 
-			String url = ROOT_URL + SENCE_ENPOWER_CREATE;
+			String url = getContext().rootUrl() + SENCE_ENPOWER_CREATE;
 
 			String req =  sandPost( url , getContext().accessKey() ,getContext().secretKey() ,senceEntity.toString() ,POST) ;
 
@@ -496,7 +492,7 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 		if( StringUtils.isNullOrEmpty( appKey  ) || appKey.length() != 32 ){
 			throw new BFException(BFException.ERRORS.INVALID_CONTEXT, "removeAuthorizedApp request appKey not exsit");
 		}
-		String url = ROOT_URL + SENCE_ENPOWER_APP_DELETE + uuid + "/" + appKey ;
+		String url = getContext().rootUrl() + SENCE_ENPOWER_APP_DELETE + uuid + "/" + appKey ;
 
 		String req =  sandGet( url , getContext().accessKey() ,getContext().secretKey()  ,DELETE ) ;
 

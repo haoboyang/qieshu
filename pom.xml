@@ -7,17 +7,22 @@
     <groupId>net.qieshu</groupId>
     <artifactId>qieshu-sdk</artifactId>
     <version>1.0</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <packaging>jar</packaging>
     <name>qieshu</name>
     <description>this is qieshu openapi sdk</description>
     <url>https://github.com/haoboyang/qieshu</url>
-
-
-    <!--<parent>-->
-    <!--<groupId>org.sonatype.oss</groupId>-->
-    <!--<artifactId>oss-parent</artifactId>-->
-    <!--<version>7</version>-->
-    <!--</parent>-->
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -48,127 +53,6 @@
             <url>https://github.com/haoboyang/qieshu</url>
         </developer>
     </developers>
-
-    <!--<distributionManagement>-->
-    <!--<snapshotRepository>-->
-    <!--&lt;!&ndash; 这个id和setting.xml对应  &ndash;&gt;-->
-    <!--<id>sonatype-nexus-snapshots</id>-->
-    <!--<name>OSS Snapshots Repository</name>-->
-    <!--<url>https://oss.sonatype.org/content/repositories/snapshots/</url>-->
-    <!--</snapshotRepository>-->
-    <!--<repository>-->
-    <!--&lt;!&ndash; 这个id和setting.xml对应  &ndash;&gt;-->
-    <!--<id>sonatype-nexus-staging</id>-->
-    <!--<name>OSS Staging Repository</name>-->
-    <!--<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
-    <!--</repository>-->
-    <!--</distributionManagement>-->
-
-
-    <!--<build>-->
-    <!--<pluginManagement>-->
-    <!--<plugins>-->
-    <!--&lt;!&ndash;指定编译器版本&ndash;&gt;-->
-    <!--<plugin>-->
-    <!--<groupId>org.apache.maven.plugins</groupId>-->
-    <!--<artifactId>maven-compiler-plugin</artifactId>-->
-    <!--<configuration>-->
-    <!--<source>1.8</source>-->
-    <!--<target>1.8</target>-->
-
-    <!--</configuration>-->
-    <!--</plugin>-->
-    <!--&lt;!&ndash;&lt;!&ndash;打包源码&ndash;&gt;&ndash;&gt;-->
-    <!--<plugin>-->
-    <!--<groupId>org.apache.maven.plugins</groupId>-->
-    <!--<artifactId>maven-source-plugin</artifactId>-->
-    <!--<executions>-->
-    <!--<execution>-->
-    <!--<id>attach-sources</id>-->
-    <!--<goals>-->
-    <!--<goal>jar-no-fork</goal>-->
-    <!--</goals>-->
-    <!--</execution>-->
-    <!--</executions>-->
-    <!--</plugin>-->
-    <!--&lt;!&ndash;&lt;!&ndash;打包文档注释&ndash;&gt;&ndash;&gt;-->
-    <!--<plugin>-->
-    <!--<groupId>org.apache.maven.plugins</groupId>-->
-    <!--<artifactId>maven-javadoc-plugin</artifactId>-->
-    <!--<version>2.10.3</version>-->
-    <!--<executions>-->
-    <!--<execution>-->
-    <!--<id>attach-javadocs</id>-->
-    <!--<goals>-->
-    <!--<goal>jar</goal>-->
-    <!--</goals>-->
-    <!--<configuration>-->
-    <!--<additionalparam>-Xdoclint:none</additionalparam>-->
-    <!--</configuration>-->
-    <!--</execution>-->
-    <!--</executions>-->
-    <!--</plugin>-->
-    <!--&lt;!&ndash;gpg加密&ndash;&gt;-->
-    <!--<plugin>-->
-    <!--<groupId>org.apache.maven.plugins</groupId>-->
-    <!--<artifactId>maven-gpg-plugin</artifactId>-->
-    <!--<version>1.6</version>-->
-    <!--<executions>-->
-    <!--<execution>-->
-    <!--<id>sign-artifacts</id>-->
-    <!--<phase>verify</phase>-->
-    <!--<goals>-->
-    <!--<goal>sign</goal>-->
-    <!--</goals>-->
-    <!--</execution>-->
-    <!--</executions>-->
-    <!--</plugin>-->
-    <!--&lt;!&ndash;指定上传仓库&ndash;&gt;-->
-    <!--&lt;!&ndash;<plugin>&ndash;&gt;-->
-    <!--&lt;!&ndash;<groupId>org.sonatype.plugins</groupId>&ndash;&gt;-->
-    <!--&lt;!&ndash;<artifactId>nexus-staging-maven-plugin</artifactId>&ndash;&gt;-->
-    <!--&lt;!&ndash;<version>1.6.3</version>&ndash;&gt;-->
-    <!--&lt;!&ndash;<extensions>true</extensions>&ndash;&gt;-->
-    <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
-    <!--&lt;!&ndash;<serverId>ossrh</serverId>&ndash;&gt;-->
-    <!--&lt;!&ndash;<nexusUrl>https://oss.sonatype.org/</nexusUrl>&ndash;&gt;-->
-    <!--&lt;!&ndash;<autoReleaseAfterClose>true</autoReleaseAfterClose>&ndash;&gt;-->
-    <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
-    <!--&lt;!&ndash;</plugin>&ndash;&gt;-->
-    <!--</plugins>-->
-    <!--</pluginManagement>-->
-    <!--</build>-->
-
-    <!--<build>-->
-    <!--<plugins>-->
-    <!--<plugin>-->
-    <!--<artifactId>maven-compiler-plugin</artifactId>-->
-    <!--<configuration>-->
-    <!--<source>1.8</source>-->
-    <!--<target>1.8</target>-->
-    <!--</configuration>-->
-
-    <!--</plugin>-->
-    <!--<plugin>-->
-    <!--<groupId>org.apache.maven.plugins</groupId>-->
-    <!--<artifactId>maven-javadoc-plugin</artifactId>-->
-    <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
-    <!--&lt;!&ndash;&lt;!&ndash;<aggregate>true</aggregate>&ndash;&gt;&ndash;&gt;-->
-    <!--&lt;!&ndash;<properties>&ndash;&gt;-->
-    <!--&lt;!&ndash;<javadoc.skip>true</javadoc.skip>&ndash;&gt;-->
-    <!--&lt;!&ndash;</properties>&ndash;&gt;-->
-    <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
-
-
-
-    <!--</plugin>-->
-    <!--<plugin>-->
-    <!--<groupId>org.apache.maven.plugins</groupId>-->
-    <!--<artifactId>maven-gpg-plugin</artifactId>-->
-
-    <!--</plugin>-->
-    <!--</plugins>-->
-    <!--</build>-->
 
     <profiles>
         <profile>

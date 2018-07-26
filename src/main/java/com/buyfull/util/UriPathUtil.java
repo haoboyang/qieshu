@@ -22,15 +22,17 @@ public class UriPathUtil {
     public static final String  DATA                     = "data" ;
     public static final String  ITEMS                    = "items" ;
     public static final int     MAXLIMIT                 = 200;
+
+
     //  app module
     public static  final String APP_CREATE               = "/app/create"; //账户下创建 app  --- api-jmnv3c08   -- test ok
     public static  final String APP_LIST                 = "/app/applist"; //账户下 app 列表                   -- test ok
     public static  final String APP_INFO                 = "/app/info/"; //获取用户详情  ---api-1wtrtjfq       -- test ok
     public static  final String APP_DELETE               = "/app/delete/"; //删除用户下面某个 app  ---api-aze04oco --test ok
     public static  final String APP_UPDATE_SECKEY        = "/app/update/seckey/"; //修改 app sk  --api-pdc3idpi  --test ok
-
     public static  final String APP_TAG                  = "/app/tag/"; //用户获取 app 场景下面所有安装位置和识别结果  --api-ea0vvs10
     public static  final String APP_RESULTS              = "/app/setrecgonize/results"; //用户在 app 下某个场景给多给安装设备位置添加识别信息 api-m9firix0
+
 
     // sence module
     public static final String  SENCE_CREATE             = "/sence/create"; //user create secen --api-5ti6xvqi --test -ok
@@ -43,12 +45,8 @@ public class UriPathUtil {
     public static final String  SENCE_REMOVE_INSRALL     = "/sence/remove/locations"; // remove sence of inatll //api-2r8r148y -- no test
 
 
-
-
-
     //device and location module
     public static final String  INSTALLSITE_LIST        = "/device/list";  // get user device and location of data list --//api-fkokvgfg --ok
-    //public static final String  INSTALLSITE_CREATE    = "/device/create";   //create device and location data
     public static final String  INSTALLSITE_INFO        = "/device/info/";//get device and location by uuid --//api-ivzlgphg //--ok
     public static final String  INSTALLSITE_BOUND       = "/device/update"; //bound device with location    --- //api-4i2n1ig4--ok
     public static final String  INSTALLSITE_UNBOUND     = "/device/relieve/"; //unbound device with location -- //api-3mslwg3u--ok

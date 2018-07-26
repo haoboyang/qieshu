@@ -1,10 +1,8 @@
 package com.buyfull.openapiv1;
 
 import org.json.JSONException;
-
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,6 +19,13 @@ public interface BFOpenAPI {
 	 * @return 当前环境中的百蝠帐号secretKey
 	 */
 	public String secretKey();
+
+	/**
+	 *
+	 * param rootUrl OPENAPI服务器地址
+	 * @return
+	 */
+	public String rootUrl() ;
 	/**
 	 * 返回当前帐号下自已创建的所有场景列表，不包含第三方授权的场景
 	 * @param pageNum 结果分页返回，从1开始

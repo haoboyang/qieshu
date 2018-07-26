@@ -1,7 +1,6 @@
 package com.buyfull.openapiv1;
 
 import java.text.ParseException;
-import java.util.Date;
 
 public interface BFObjBaseV1 {
 	public BFOpenAPI getContext();

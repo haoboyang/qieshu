@@ -1,7 +1,6 @@
 package com.buyfull.openapiv1.implement;
 
 import com.buyfull.openapiv1.BFException;
-
 import java.text.ParseException;
 
 public class BFObjFactory {

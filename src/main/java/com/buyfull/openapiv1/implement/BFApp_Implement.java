@@ -2,9 +2,7 @@ package com.buyfull.openapiv1.implement;
 
 import java.text.ParseException;
 import java.util.*;
-
 import com.buyfull.openapiv1.*;
-
 import com.buyfull.util.PageParam;
 import com.buyfull.util.SignAndSend;
 import com.buyfull.util.StringUtils;
@@ -12,8 +10,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import static com.buyfull.openapiv1.BFOpenAPIManager.ROOT_URL;
 import static com.buyfull.openapiv1.BFOpenAPIManager.createBFOpenAPInstance;
 import static com.buyfull.util.SignAndSend.sandGet;
 import static com.buyfull.util.TimeUtile.simpleDateFormat;
@@ -108,7 +104,7 @@ public class BFApp_Implement extends BFObjBaseV1_Implement  implements BFApp {
 			return false;
 		}
 		try {
-			String url = ROOT_URL + APP_INFO + uuid ;
+			String url = getContext().rootUrl() + APP_INFO + uuid ;
 			String req = SignAndSend.sandGet( url ,getContext().accessKey() , getContext().secretKey(),GET   ) ;
 			JSONObject result = new JSONObject( req ) ;
 
@@ -152,7 +148,7 @@ public class BFApp_Implement extends BFObjBaseV1_Implement  implements BFApp {
 	public boolean generateSecKey() throws BFException, ParseException {
 		try {
 
-			String url = ROOT_URL + APP_UPDATE_SECKEY + uuid + "/" + this.getLastUpdateTime();
+			String url = getContext().rootUrl() + APP_UPDATE_SECKEY + uuid + "/" + this.getLastUpdateTime();
 			String req = SignAndSend.sandGet( url ,getContext().accessKey() , getContext().secretKey() ,PUT   ) ;
 			JSONObject result = new JSONObject( req ) ;
 			if( result.getString(CODE).equals(OK) ){
@@ -176,7 +172,7 @@ public class BFApp_Implement extends BFObjBaseV1_Implement  implements BFApp {
 	 */
 	public BFPage<? extends BFScene> getAuthorizedSceneList(int pageNum ,int limit , String senceName , String brand , String address   ) throws BFException, ParseException {
 		//BFOpenAPI_Implement api = (BFOpenAPI_Implement) getContext();
-		StringBuilder   urlBuild = new StringBuilder( ROOT_URL + SENCE_ENPOWER_LIST);
+		StringBuilder   urlBuild = new StringBuilder( getContext().rootUrl() + SENCE_ENPOWER_LIST);
 						urlBuild.append("?pageNum=" + pageNum);
 						urlBuild.append("&limit=" + limit ) ;
 
@@ -222,7 +218,7 @@ public class BFApp_Implement extends BFObjBaseV1_Implement  implements BFApp {
 		if( !isValid()||StringUtils.isNullOrEmpty(scene.uuid()  ) || scene.uuid().length()!=32){
 			throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid and sence_uuid can't be blank");
 		}
-         String url = ROOT_URL + APP_TAG + uuid + "/" + scene.uuid() ;
+         String url = getContext().rootUrl() + APP_TAG + uuid + "/" + scene.uuid() ;
 		 String req = SignAndSend.sandGet( url ,getContext().accessKey() ,getContext().secretKey() , GET    ) ;
 		 try {
 			 JSONObject  reqResult = new JSONObject( req  ) ;
@@ -270,7 +266,7 @@ public class BFApp_Implement extends BFObjBaseV1_Implement  implements BFApp {
 				dataObj.put("senceId",scene.uuid()  );
 				dataObj.put("appId",uuid ) ;
 				dataObj.put( "location_tag",tags.toString()  );
-				String url = ROOT_URL + APP_RESULTS;
+				String url = getContext().rootUrl() + APP_RESULTS;
 				String req = SignAndSend.sandPost(   url , getContext().accessKey() ,getContext().secretKey() ,dataObj.toString() ,POST ) ;
 				JSONObject  reqResult = new JSONObject( req ) ;
 				if( reqResult.getString(CODE).equals(OK)  ){
