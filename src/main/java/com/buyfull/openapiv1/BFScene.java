@@ -76,7 +76,7 @@ public interface BFScene extends BFObjBaseV1 {
 	 * @return 此场景下的所有安装位置列表
 	 * @throws BFException 服务器返回具体错误信息
 	 */
-	public List<? extends BFInstallSite> getInstallSiteList() throws BFException, ParseException;
+	public BFPage<? extends BFInstallSite> getInstallSiteList(int pageNum , int limit) throws BFException, ParseException;
 	
 	/**
 	 * 创建一个安装位置

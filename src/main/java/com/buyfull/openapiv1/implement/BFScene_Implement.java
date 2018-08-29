@@ -225,7 +225,6 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 	 * @return
 	 * @throws BFException
 	 */
-	public List<? extends BFInstallSite> getInstallSiteList() throws BFException, ParseException {
 		if( !isValid() ){
 			throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid can't be blank");
 		}
