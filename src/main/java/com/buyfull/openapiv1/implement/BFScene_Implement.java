@@ -16,6 +16,8 @@ import com.buyfull.util.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static com.buyfull.util.PageParam.getLocationePageResult;
 import static com.buyfull.util.SignAndSend.sandPost;
 import static com.buyfull.util.SignAndSend.sandGet;
 import static com.buyfull.util.TimeUtile.getDateStr;
@@ -225,11 +227,14 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 	 * @return
 	 * @throws BFException
 	 */
+	public BFPage<? extends BFInstallSite> getInstallSiteList( int pageNum , int limit   ) throws BFException, ParseException {
 		if( !isValid() ){
 			throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid can't be blank");
 		}
-		String url  = getContext().rootUrl() + SENCE_DEVICE_LIST + uuid ;
-		String req  = SignAndSend.sandGet( url , getContext().accessKey() ,getContext().secretKey() ,GET  ) ;
+		StringBuilder   urlBuild  =  new StringBuilder( getContext().rootUrl() + SENCE_DEVICE_LIST + this.uuid )  ;
+						urlBuild.append("?pageNum=" + pageNum);
+						urlBuild.append("&limit=" + limit ) ;
+		String req  = SignAndSend.sandGet( urlBuild.toString() , getContext().accessKey() ,getContext().secretKey() ,GET  ) ;
 		try {
 
 			JSONObject reqResult = new JSONObject( req );
@@ -241,7 +246,7 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 				for ( int i = 0 ; i < reqList.length() ; i ++ ) {
 					resultList.add( BFObjFactory.createBFInstallSite((BFOpenAPI_Implement) getContext(), reqList.getString( i )   ) ) ;
 				}
-				return resultList ;
+				return getLocationePageResult( reqResult.getJSONObject(DATA)  ,  resultList  ) ;
 			}
 		} catch ( JSONException e ) {
 			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server getInstallSiteList return bad json");
