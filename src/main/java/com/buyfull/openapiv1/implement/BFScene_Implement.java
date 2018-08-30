@@ -241,7 +241,7 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 			if(  reqResult.getString(CODE).equals( OK  )  ){
 				//create BFInstallSite
 				List<BFInstallSite_Implement> resultList = new ArrayList<>() ;
-				JSONArray    reqList =  reqResult.getJSONArray( DATA  );
+				JSONArray    reqList =  reqResult.getJSONObject(DATA).getJSONArray( ITEMS  );
 
 				for ( int i = 0 ; i < reqList.length() ; i ++ ) {
 					resultList.add( BFObjFactory.createBFInstallSite((BFOpenAPI_Implement) getContext(), reqList.getString( i )   ) ) ;
