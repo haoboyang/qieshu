@@ -15,23 +15,23 @@ public class BFObjFactory {
 		return cache_app;
 	}
 	
-	public static BFScene_Implement createBFScene(BFOpenAPI_Implement context, String uuid) throws BFException, ParseException {
+	public static BFGroup_Implement createBFGroup(BFOpenAPI_Implement context, String uuid) throws BFException, ParseException {
 
-		BFScene_Implement scene = new BFScene_Implement(context, uuid);
+		BFGroup_Implement GroupName = new BFGroup_Implement(context, uuid);
 
-		BFScene_Implement cache_scene = (BFScene_Implement) BFCacheManager.getSetCacheObj(context.accessKey(), scene);
-		if( cache_scene == null )
-			cache_scene = scene ;
-		if (!cache_scene.isValid())
-			cache_scene.fetch();
-		return cache_scene;
+		BFGroup_Implement cache_GroupName = (BFGroup_Implement) BFCacheManager.getSetCacheObj(context.accessKey(), GroupName);
+		if( cache_GroupName == null )
+			cache_GroupName = GroupName ;
+		if (!cache_GroupName.isValid())
+			cache_GroupName.fetch();
+		return cache_GroupName;
 	}
 	
-	public static BFInstallSite_Implement createBFInstallSite(BFOpenAPI_Implement context, String uuid) throws BFException, ParseException {
+	public static BFItem_Implement createBFItem(BFOpenAPI_Implement context, String uuid) throws BFException, ParseException {
 
-		BFInstallSite_Implement is = new BFInstallSite_Implement(context, uuid);
+		BFItem_Implement is = new BFItem_Implement(context, uuid);
 
-		BFInstallSite_Implement cache_is = (BFInstallSite_Implement) BFCacheManager.getSetCacheObj(context.accessKey(), is);
+		BFItem_Implement cache_is = (BFItem_Implement) BFCacheManager.getSetCacheObj(context.accessKey(), is);
 		if(cache_is == null )
 			cache_is = is ;
 		if (!cache_is.isValid())

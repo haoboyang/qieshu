@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import com.alibaba.fastjson.JSON;
 import com.buyfull.openapiv1.BFException;
-import com.buyfull.openapiv1.BFInstallSite;
+import com.buyfull.openapiv1.BFGroup;
+import com.buyfull.openapiv1.BFItem;
 import com.buyfull.openapiv1.BFPage;
-import com.buyfull.openapiv1.BFScene;
 import com.buyfull.util.PageParam;
 import com.buyfull.util.SignAndSend;
 import com.buyfull.util.StringUtils;
@@ -25,63 +25,30 @@ import static com.buyfull.util.UriPathUtil.*;
 import static com.buyfull.util.UriPathUtil.DATA;
 import static com.buyfull.util.UriPathUtil.MESSAGE;
 
-public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene {
-    private String senceName ;
+public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup {
 
-    private String brand ;
+    private String groupName ;
 
-    private String province ;
-
-    private String city;
-
-    private String address ;
+    private String  backup ;
 
     private Long boundCode ;
 
-	public BFScene_Implement(BFOpenAPI_Implement context, String uuid) throws BFException {
+	public BFGroup_Implement(BFOpenAPI_Implement context, String uuid) throws BFException {
 		super(context, uuid);
 		// TODO Auto-generated constructor stub
 	}
 
-	public String getSenceName() {
-		return this.senceName;
+	public String getGroupName() {
+		return this.groupName;
 	}
 
-	public void setSenceName(String senceName) {
+	public void setGroupName(String groupName) {
 
-		this.senceName = senceName;
+		this.groupName = groupName;
 	}
 
-	public String getAddress() {
-		return this.address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address ;
-	}
-
-	public String getProvince() {
-		return this.province;
-	}
-
-	public void setProvince(String province) {
-		this.province = province;
-	}
-
-	public String getCity() {
-		return this.city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getBrand() {
-		return this.brand;
-	}
-
-	public void setBrand(String brand) {
-		this.brand = brand ;
+	public String getBackup(){
+		return this.backup;
 	}
 
 	public Long getBoundCode() {
@@ -99,19 +66,16 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 		isValid();
 
 		try {
-			String url = getContext().rootUrl() + SENCE_INFO + uuid ;
+			String url = getContext().rootUrl() + GROUP_INFO + uuid ;
 			String req = SignAndSend.sandGet( url ,getContext().accessKey() ,getContext().secretKey() ,GET   ) ;
 			JSONObject result = new JSONObject( req ) ;
 
 			if( result.getString(CODE).equals(OK) ){
 
-				this.senceName                = result.getJSONObject(DATA).getString("senceName") ;
-				this.brand                 = result.getJSONObject(DATA).getString("brand") ;
+				this.groupName                = result.getJSONObject(DATA).getString("groupName") ;
 				this.boundCode                 = result.getJSONObject(DATA).getLong("boundId") ;
-				this.uuid          			= result.getJSONObject(DATA).getString("o_senceId") ;
-				this.address        			= result.getJSONObject(DATA).getString( "address"   );
-				this.province     			= result.getJSONObject(DATA).optString("province");
-				this.city   			= result.getJSONObject(DATA).optString("city");
+				this.uuid          			= result.getJSONObject(DATA).getString("o_groupId") ;
+				this.backup     			= result.getJSONObject(DATA).optString("backup");
 				this.createTime         = result.getJSONObject(DATA).optString("createTime");
 				this.lastUpdateTimeStamp 	=    result.getJSONObject(DATA).optLong("lastUpdateTime")   ;
 			}
@@ -131,30 +95,30 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 	 * @throws BFException
 	 */
 	@Override
-	public boolean update() throws BFException, ParseException {
+	public boolean update( String groupName ,String address , String province , String city , String brand   ) throws BFException, ParseException {
 		isValid();
 
-		if(  StringUtils.isNullOrEmpty( senceName  )||
+		if(  StringUtils.isNullOrEmpty( groupName  )||
 				StringUtils.isNullOrEmpty( address  )  ||
 				StringUtils.isNullOrEmpty( province  ) ||
 				StringUtils.isNullOrEmpty( city  ) ||
 				StringUtils.isNullOrEmpty( brand  )||
 				lastUpdateTimeStamp== 0 ) {
-			throw new BFException(BFException.ERRORS.INVALID_CONTEXT, "update sence of param senceName , address ,province ,city,brand can't be blank ");
+			throw new BFException(BFException.ERRORS.INVALID_CONTEXT, "update group of param groupName , address ,province ,city,brand can't be blank ");
 		}
 		try {
 
-			JSONObject  senceEntity = new JSONObject() ;
-			senceEntity.put("o_senceId", uuid);
-			senceEntity.put("senceName", getSenceName());
-			senceEntity.put("address", getAddress());
-			senceEntity.put("province", getProvince());
-			senceEntity.put("city",getCity());
-			senceEntity.put("brand", getBrand());
-			senceEntity.put("lastupdateTime", String.valueOf(lastUpdateTime() )) ;
-            String url = getContext().rootUrl() + SENCE_UPDATE ;
+			JSONObject  groupEntity = new JSONObject() ;
+			groupEntity.put("o_groupId", uuid);
+			groupEntity.put("groupName", groupName );
+			groupEntity.put("address", address );
+			groupEntity.put("province", province );
+			groupEntity.put("city", city );
+			groupEntity.put("brand", brand );
+			groupEntity.put("lastupdateTime", String.valueOf(lastUpdateTime() )) ;
+            String url = getContext().rootUrl() + GROUP_UPDATE ;
 
-			String req =  sandPost( url , getContext().accessKey() ,getContext().secretKey() ,senceEntity.toString() ,PUT) ;
+			String req =  sandPost( url , getContext().accessKey() ,getContext().secretKey() ,groupEntity.toString() ,PUT) ;
 
 			JSONObject reqResult = new JSONObject( req ) ;
 
@@ -163,22 +127,19 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 				return  fetch();
 			}
 			else{
-				throw new BFException(BFException.ERRORS.SENCE_UPDATE_ERROR, reqResult.getString(MESSAGE)  );
+				throw new BFException(BFException.ERRORS.GROUP_UPDATE_ERROR, reqResult.getString(MESSAGE)  );
 			}
 
 		}catch (JSONException jsonex){
-			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server createSence return bad json");
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server creategroup return bad json");
 		}
 	}
 
 	@Override
 	public void destory(){
-		this.senceName     = null ;
+		this.groupName     = null ;
 		this.uuid          = null ;
-		this.province      = null ;
-		this.city          = null ;
-		this.brand         = null ;
-		this.address       = null ;
+		this.backup      = null ;
 		this.boundCode     = null ;
 		super.destory();
 
@@ -205,7 +166,7 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 		JSONObject   reqResult= null ;
 		try {
 
-			String url  = getContext().rootUrl() + SENCE_GENERATE_BOUNDCODE + uuid + "/" + lastUpdateTimeStamp ;
+			String url  = getContext().rootUrl() + GROUP_GENERATE_BOUNDCODE + uuid + "/" + lastUpdateTimeStamp ;
 			String req = SignAndSend.sandGet( url ,getContext().accessKey() ,getContext().secretKey() ,PUT  ) ;
 			             reqResult = new JSONObject( req  ) ;
 			if( reqResult.getString(CODE).equals(OK) ){
@@ -217,7 +178,7 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 			}
 		}catch (JSONException jsonex){
 			jsonex.printStackTrace();
-			throw new BFException(BFException.ERRORS.HTTP_ERROR ,"server getInstallSiteList return bad json"  );
+			throw new BFException(BFException.ERRORS.HTTP_ERROR ,"server getItemList return bad json"  );
 		}
 	}
 
@@ -227,11 +188,11 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 	 * @return
 	 * @throws BFException
 	 */
-	public BFPage<? extends BFInstallSite> getInstallSiteList( int pageNum , int limit   ) throws BFException, ParseException {
+	public BFPage<? extends BFItem> getItemList( int pageNum , int limit   ) throws BFException, ParseException {
 		if( !isValid() ){
 			throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid can't be blank");
 		}
-		StringBuilder   urlBuild  =  new StringBuilder( getContext().rootUrl() + SENCE_DEVICE_LIST + this.uuid )  ;
+		StringBuilder   urlBuild  =  new StringBuilder( getContext().rootUrl() + GROUP_DEVICE_LIST + this.uuid )  ;
 						urlBuild.append("?pageNum=" + pageNum);
 						urlBuild.append("&limit=" + limit ) ;
 		String req  = SignAndSend.sandGet( urlBuild.toString() , getContext().accessKey() ,getContext().secretKey() ,GET  ) ;
@@ -239,17 +200,17 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 
 			JSONObject reqResult = new JSONObject( req );
 			if(  reqResult.getString(CODE).equals( OK  )  ){
-				//create BFInstallSite
-				List<BFInstallSite_Implement> resultList = new ArrayList<>() ;
+				//create BFItem
+				List<BFItem_Implement> resultList = new ArrayList<>() ;
 				JSONArray    reqList =  reqResult.getJSONObject(DATA).getJSONArray( ITEMS  );
 
 				for ( int i = 0 ; i < reqList.length() ; i ++ ) {
-					resultList.add( BFObjFactory.createBFInstallSite((BFOpenAPI_Implement) getContext(), reqList.getString( i )   ) ) ;
+					resultList.add( BFObjFactory.createBFItem((BFOpenAPI_Implement) getContext(), reqList.getString( i )   ) ) ;
 				}
 				return getLocationePageResult( reqResult.getJSONObject(DATA)  ,  resultList  ) ;
 			}
 		} catch ( JSONException e ) {
-			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server getInstallSiteList return bad json");
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server getItemList return bad json");
 
 		}
 
@@ -259,18 +220,18 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 	/**
 	 *
 	 * 场景下面添加安装位置
- 	 * @param installDescrption 具体的安装位置的说明文字
+ 	 * @param itemDescrption 具体的安装位置的说明文字
 	 * @param deviceSN 百蝠设备序列号，可为空
 	 * @return
 	 * @throws BFException
 	 */
-	public BFInstallSite createInstallSite(String installDescrption, String deviceSN) throws BFException, ParseException {
-		HashMap<String, String> installDescrptionList = new HashMap<>() ;
-							    installDescrptionList.put(  installDescrption , deviceSN  ) ;
+	public BFItem createItem(String itemDescrption, String deviceSN) throws BFException, ParseException {
+		HashMap<String, String> itemDescrptionList = new HashMap<>() ;
+							    itemDescrptionList.put(  itemDescrption , deviceSN  ) ;
 
-		List<BFInstallSite_Implement> InstallSite = (List<BFInstallSite_Implement>) createInstallSiteList(installDescrptionList);
-		if( !InstallSite.isEmpty() ){
-			return InstallSite.get( 0 ) ;
+		List<BFItem_Implement> ITEM = (List<BFItem_Implement>) createItemList(itemDescrptionList);
+		if( !ITEM.isEmpty() ){
+			return ITEM.get( 0 ) ;
 		}
 		return null;
 	}
@@ -278,52 +239,52 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 	/**
 	 *
 	 * 场景下批量添加安装位置
-	 * @param installDescrptionList 多个安装位置列表，key为百蝠设备序列号，value为具体的安装位置的说明文字，可为空
+	 * @param itemDescrptionList 多个安装位置列表，key为百蝠设备序列号，value为具体的安装位置的说明文字，可为空
 	 * @return
 	 * @throws BFException
 	 */
-	public List<? extends BFInstallSite> createInstallSiteList(HashMap<String, String> installDescrptionList)
+	public List<? extends BFItem> createItemList(HashMap<String, String> itemDescrptionList)
 			throws BFException {
 
 		if( !isValid() ){
 			throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid can't be blank");
 		}
-		if( installDescrptionList.isEmpty()|| installDescrptionList.size() > MAXLIMIT ){
+		if( itemDescrptionList.isEmpty()|| itemDescrptionList.size() > MAXLIMIT ){
 			throw new BFException(BFException.ERRORS.INVALID_WORK, " 设备安装位置不能为空且最大批量数为"+MAXLIMIT);
 		}
 
-        String url  = getContext().rootUrl()  + INSTALLSITE_CREATEBEACH ;
+        String url  = getContext().rootUrl()  + ITEM_CREATEBEACH ;
 		try {
-			installDescrptionList.forEach((k,v)->{
+			itemDescrptionList.forEach((k,v)->{
 				if(  v == null )
-					installDescrptionList.put(k , "" );
+					itemDescrptionList.put(k , "" );
 			});
-            String 	installDescrptio = 	JSON.toJSONString(  installDescrptionList  );
+            String 	itemDescrptio = 	JSON.toJSONString(  itemDescrptionList  );
 			JSONObject  data = new JSONObject() ;
-			data.put( "sence_uuid" ,uuid ) ;
-			data.put( "installDescrptio" , 	JSON.toJSONString(  installDescrptionList  ) ) ;
+			data.put( "group_uuid" ,uuid ) ;
+			data.put( "itemDescrptio" , 	JSON.toJSONString(  itemDescrptionList  ) ) ;
 			String req = SignAndSend.sandPost(  url ,getContext().accessKey() ,getContext().secretKey() , data.toString() ,POST );
 			JSONObject reqResult = new JSONObject( req ) ;
 
 			if( reqResult.getString(CODE ).equals(  OK )  ){
 
-				List<BFInstallSite_Implement> installSite_implements = new ArrayList<>() ;
+				List<BFItem_Implement> ITEM_implements = new ArrayList<>() ;
 				JSONArray  array = reqResult.getJSONArray(DATA) ;
 				for( int i  = 0 ; i < array.length() ; i ++ ){
 
-					installSite_implements.add(  BFObjFactory.createBFInstallSite((BFOpenAPI_Implement) getContext(), array.getString( i )   )  ) ;
+					ITEM_implements.add(  BFObjFactory.createBFItem((BFOpenAPI_Implement) getContext(), array.getString( i )   )  ) ;
 				}
-				return installSite_implements ;
+				return ITEM_implements ;
 
 			}else{
 				throw new BFException(BFException.ERRORS.NETWORK_ERROR ,reqResult.getString( MESSAGE )  );
 			}
 		}catch ( JSONException jsonEx ){
-			throw new BFException(BFException.ERRORS.INVALID_JSON, "server getInstallSiteList return bad json");
+			throw new BFException(BFException.ERRORS.INVALID_JSON, "server getItemList return bad json");
 
 		} catch (ParseException e) {
 			e.printStackTrace();
-			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server createInstallSiteList return bad json");
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server createItemList return bad json");
 
 		}
 	}
@@ -335,10 +296,10 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 	 * @return
 	 * @throws BFException
 	 */
-	public boolean removeInstallSite(BFInstallSite is) throws BFException {
-    List<BFInstallSite>list = new ArrayList<>() ;
+	public boolean removeItem(BFItem is) throws BFException {
+    List<BFItem>list = new ArrayList<>() ;
         list.add( is ) ;
-		return removeInstallSites(  list );
+		return removeItems(  list );
 	}
 
 	/**
@@ -348,7 +309,7 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 	 * @return
 	 * @throws BFException
 	 */
-	public boolean removeInstallSites(List<? extends BFInstallSite> islist) throws BFException {
+	public boolean removeItems(List<? extends BFItem> islist) throws BFException {
 		if( !isValid() ){
 			throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid can't be blank");
 		}
@@ -361,12 +322,12 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
         });
         JSONObject data = new JSONObject() ;
         try {
-            data.put( "senceId",uuid ) ;
-            data.put("locationUuid",deviceIds);
+            data.put( "groupId",uuid ) ;
+            data.put("itemNameUuid",deviceIds);
         } catch (JSONException e) {
             throw new BFException(BFException.ERRORS.INVALID_JSON, e.getMessage() );
         }
-        String url = getContext().rootUrl() + SENCE_REMOVE_INSRALL ;
+        String url = getContext().rootUrl() + GROUP_REMOVE_INSRALL ;
         String req = SignAndSend.sandPost( url , getContext().accessKey() ,getContext().secretKey(), data.toString(), POST   ) ;
         try {
             JSONObject reqResult = new JSONObject( req ) ;
@@ -383,7 +344,7 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 
             }
         }catch (JSONException jsonex){
-            throw new BFException(BFException.ERRORS.HTTP_ERROR, "server removeInstallSites return bad json");
+            throw new BFException(BFException.ERRORS.HTTP_ERROR, "server createItems return bad json");
 
         }
 	}
@@ -402,10 +363,10 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 		if( limit > MAXLIMIT){
 			throw new BFException(BFException.ERRORS.INVALID_WORK, "获取授权列表最大数为"+MAXLIMIT);
 		}
-		StringBuilder   urlBuild  =  new StringBuilder( getContext().rootUrl() + SENCE_ENPOWER_APP_LIST)  ;
+		StringBuilder   urlBuild  =  new StringBuilder( getContext().rootUrl() + GROUP_ENPOWER_APP_LIST)  ;
 						urlBuild.append("?pageNum=" + pageNum);
 						urlBuild.append("&limit=" + limit ) ;
-						urlBuild.append("&senceUuid=" + uuid ) ;
+						urlBuild.append("&groupUuid=" + uuid ) ;
 		String req  = SignAndSend.sandGet( urlBuild.toString() , getContext().accessKey() ,getContext().secretKey() ,GET  ) ;
 		try {
 			JSONObject reqResult = new JSONObject( req );
@@ -415,10 +376,10 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 				for( int i = 0 ; i < jsonArray.length() ; i ++  ){
 					list.add(jsonArray.getString(i));
 				}
-				return PageParam.getSenceauthAppkeys( reqResult.getJSONObject(DATA) , list );
+				return PageParam.getgroupauthAppkeys( reqResult.getJSONObject(DATA) , list );
 			}
 		} catch ( JSONException e ) {
-			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server getInstallSiteList return bad json");
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server getItemList return bad json");
 
 		}
 		return null ;
@@ -447,22 +408,22 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 				endDate == null ){
 			String a = null ;
 
-			throw new BFException(BFException.ERRORS.INVALID_CONTEXT, "addAuthorizedApp   of param senceName , address ,province ,city,brand can't be blank ");
+			throw new BFException(BFException.ERRORS.INVALID_CONTEXT, "addAuthorizedApp   of param groupName , address ,province ,city,brand can't be blank ");
 		}
 		try {
 
-			JSONObject  senceEntity = new JSONObject() ;
-			JSONArray senceId = new JSONArray(  ) ;
-            senceId.put(uuid);
-			senceEntity.put("appId", appKey);
-			senceEntity.put("startData", getDateStr(startDate));
-			senceEntity.put("endData", getDateStr(endDate));
-			senceEntity.put("senceId", senceId);
-			senceEntity.put("appBackupName", backupName);
+			JSONObject  groupEntity = new JSONObject() ;
+			JSONArray groupId = new JSONArray(  ) ;
+            groupId.put(uuid);
+			groupEntity.put("appId", appKey);
+			groupEntity.put("startData", getDateStr(startDate));
+			groupEntity.put("endData", getDateStr(endDate));
+			groupEntity.put("groupId", groupId);
+			groupEntity.put("appBackupName", backupName);
 
-			String url = getContext().rootUrl() + SENCE_ENPOWER_CREATE;
+			String url = getContext().rootUrl() + GROUP_ENPOWER_CREATE;
 
-			String req =  sandPost( url , getContext().accessKey() ,getContext().secretKey() ,senceEntity.toString() ,POST) ;
+			String req =  sandPost( url , getContext().accessKey() ,getContext().secretKey() ,groupEntity.toString() ,POST) ;
 
 			JSONObject reqResult = new JSONObject( req ) ;
 
@@ -496,7 +457,7 @@ public class BFScene_Implement extends BFObjBaseV1_Implement implements BFScene 
 		if( StringUtils.isNullOrEmpty( appKey  ) || appKey.length() != 32 ){
 			throw new BFException(BFException.ERRORS.INVALID_CONTEXT, "removeAuthorizedApp request appKey not exsit");
 		}
-		String url = getContext().rootUrl() + SENCE_ENPOWER_APP_DELETE + uuid + "/" + appKey ;
+		String url = getContext().rootUrl() + GROUP_ENPOWER_APP_DELETE + uuid + "/" + appKey ;
 
 		String req =  sandGet( url , getContext().accessKey() ,getContext().secretKey()  ,DELETE ) ;
 

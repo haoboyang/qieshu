@@ -1,13 +1,13 @@
 package com.buyfull.util;
 
 import com.buyfull.openapiv1.BFApp;
-import com.buyfull.openapiv1.BFInstallSite;
-import com.buyfull.openapiv1.BFScene;
+import com.buyfull.openapiv1.BFItem;
+import com.buyfull.openapiv1.BFGroup;
 import com.buyfull.openapiv1.implement.BFApp_Implement;
-import com.buyfull.openapiv1.implement.BFInstallSite_Implement;
+import com.buyfull.openapiv1.implement.BFItem_Implement;
 import com.buyfull.openapiv1.implement.BFPage_Implement;
 import java.util.List ;
-import com.buyfull.openapiv1.implement.BFScene_Implement;
+import com.buyfull.openapiv1.implement.BFGroup_Implement;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,7 +40,7 @@ public  class PageParam {
     }
 
 
-    public static BFPage_Implement<? extends BFScene> getSencePageResult(JSONObject resultStr , List<BFScene_Implement> list  ) throws JSONException {
+    public static BFPage_Implement<? extends BFGroup> getgroupPageResult(JSONObject resultStr , List<BFGroup_Implement> list  ) throws JSONException {
         boolean hashMore =  false ;
         if( resultStr.getInt("isMore") != 0 ){
             hashMore = true ;
@@ -56,7 +56,7 @@ public  class PageParam {
 
     }
 
-    public static BFPage_Implement<? extends BFInstallSite> getLocationePageResult(JSONObject resultStr , List<BFInstallSite_Implement> list  ) throws JSONException {
+    public static BFPage_Implement<? extends BFItem> getLocationePageResult(JSONObject resultStr , List<BFItem_Implement> list  ) throws JSONException {
         boolean hashMore =  false ;
         if( resultStr.getInt("isMore") != 0 ){
             hashMore = true ;
@@ -71,7 +71,7 @@ public  class PageParam {
         return pageData ;
     }
 
-    public static BFPage_Implement<String> getSenceauthAppkeys(JSONObject resultStr , List<String> list  ) throws JSONException {
+    public static BFPage_Implement<String> getgroupauthAppkeys(JSONObject resultStr , List<String> list  ) throws JSONException {
         boolean hashMore =  false ;
         if( resultStr.getInt("isMore") != 0 ){
             hashMore = true ;
@@ -101,6 +101,20 @@ public  class PageParam {
         return pageData ;
     }
 
+    public static BFPage_Implement<String> getAuthorizedItemListStr(com.alibaba.fastjson.JSONObject resultStr , List<String> list  ) throws JSONException {
+        boolean hashMore =  false ;
+        if( resultStr.getIntValue("isMore") != 0 ){
+            hashMore = true ;
+        }
+        BFPage_Implement pageData  = new BFPage_Implement( resultStr.getIntValue("currentPage") ,
+                resultStr.getIntValue("pageSize") ,
+                resultStr.getIntValue("totalNum") ,
+                hashMore ,
+                resultStr.getIntValue("totalPage") ,
+                list
+        );
+        return pageData ;
+    }
 
 
 

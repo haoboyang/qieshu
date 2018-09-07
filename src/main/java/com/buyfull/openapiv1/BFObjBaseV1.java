@@ -9,14 +9,14 @@ public interface BFObjBaseV1 {
 	 */
 	public void destory();
 	/**
-	 * BFAPP, BFScene, BFInstallSite等对象的基本属性可以通过此方法获取数据
+	 * BFAPP, BFGroup, BFItem等对象的基本属性可以通过此方法获取数据
 	 * @return true为成功 false为失败
 	 * @throws BFException 服务器返回具体错误信息
 	 */
 	public boolean fetch() throws BFException, ParseException;
 	
 	/**
-	 * BFAPP, BFScene, BFInstallSite等对象的基本属性更新后需要调用此方法上传更新
+	 * BFAPP, BFGroup, BFItem等对象的基本属性更新后需要调用此方法上传更新
 	 * @return true为成功 false为失败
 	 * @throws BFException 服务器返回具体错误信息
 	 */

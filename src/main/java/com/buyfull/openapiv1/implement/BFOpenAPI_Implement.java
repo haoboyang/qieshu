@@ -3,6 +3,8 @@ package com.buyfull.openapiv1.implement;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.buyfull.openapiv1.*;
 import com.buyfull.util.PageParam;
@@ -84,7 +86,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 
 	@Override
 	public BFPage<String> getAuthAppKeys(int pageNum, int limit) throws BFException {
-		StringBuilder  urlBuild = new StringBuilder( rootUrl + SENCE_ENPOWER_APP_LISTVO );
+		StringBuilder  urlBuild = new StringBuilder( rootUrl + GROUP_ENPOWER_APP_LISTVO );
 		urlBuild.append("?pageNum=" + pageNum);
 		urlBuild.append("&limit=" + limit ) ;
 		String result = sandGet( urlBuild.toString().trim() , this.accessKey , this.secretKey , GET   ) ;
@@ -100,17 +102,17 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 				return PageParam.getAuthAppListVo( req.getJSONObject(DATA) , list   );
 			}
 		}catch (JSONException   jsonex){
-			throw new BFException(BFException.ERRORS.INVALID_JSON, "server senceList return bad json");
+			throw new BFException(BFException.ERRORS.INVALID_JSON, "server groupList return bad json");
 		}
 	}
 
     @Override
-    public BFPage<String> getAuthAppSenceList(int pageNum, int limit, String appKey) throws BFException {
+    public BFPage<String> getAuthAppGroupList(int pageNum, int limit, String appKey) throws BFException {
 		if( limit > MAXLIMIT )
 			throw new BFException(BFException.ERRORS.INVALID_WORK, "获取列表最大数为"+MAXLIMIT);
 		if( StringUtils.isNullOrEmpty( appKey ) || appKey.trim().length()!=32  )
             throw new BFException(BFException.ERRORS.INVALID_UUID, " request appKey can't be blank");
-        StringBuilder   urlBuild = new StringBuilder( rootUrl + SENCE_ENPOWER_APP_SENCELIST);
+        StringBuilder   urlBuild = new StringBuilder( rootUrl + GROUP_ENPOWER_APP_groupList);
 						urlBuild.append("?pageNum=" + pageNum);
 						urlBuild.append("&limit=" + limit ) ;
 						urlBuild.append("&appKey=" + appKey ) ;
@@ -127,7 +129,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
                 return PageParam.getAuthAppListVo( req.getJSONObject(DATA) , list   );
             }
         }catch (JSONException   jsonex){
-            throw new BFException(BFException.ERRORS. HTTP_ERROR, "server senceList return bad json");
+            throw new BFException(BFException.ERRORS. HTTP_ERROR, "server groupList return bad json");
         }
     }
 
@@ -140,41 +142,33 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 	 * @return
 	 * @throws BFException
 	 */
-	public BFPage<? extends BFScene> getSceneList(int pageNum, int limit) throws BFException, ParseException {
-		return findScenesByKeyword(null , null ,null  ,pageNum ,limit);
+	public BFPage<? extends BFGroup> getGroupList(int pageNum, int limit) throws BFException, ParseException {
+		return findGroupsByKeyword(null , null ,pageNum ,limit);
 	}
 
 	/**
 	 *
 	 *
-	 * @param name 场景名称
-	 * @param brand 品牌
-	 * @param address 地址，可包含城市省份
+	 * @param groupName 场景名称
+	 * @param backup 根据品牌 ， 地址
 	 * @param pageNum 结果分页返回，从1开始
 	 * @param limit 结果分页返回，每页返回limit条，范围 1 - 200
 	 * @return
 	 * @throws BFException
 	 */
-	public BFPage<? extends BFScene> findScenesByKeyword(String name, String brand, String address, int pageNum,
+	public BFPage<? extends BFGroup> findGroupsByKeyword(String groupName, String backup, int pageNum,
                                                          int limit) throws BFException, ParseException {
-		StringBuilder  urlBuild = new StringBuilder( rootUrl + SENCE_LIST);
+		StringBuilder  urlBuild = new StringBuilder( rootUrl + GROUP_LIST);
 			urlBuild.append("?pageNum=" + pageNum);
 			urlBuild.append("&limit=" + limit ) ;
 
-			if(  !StringUtils.isNullOrEmpty( name  ) ){
-                urlBuild.append("&senceName=" + name ) ;
+			if(  !StringUtils.isNullOrEmpty( groupName  ) ){
+                urlBuild.append("&groupName=" + groupName ) ;
             }
 
-            if(  !StringUtils.isNullOrEmpty( brand ) ){
-                 urlBuild.append("&brand=" +  brand) ;
-            }
-
-            if( !StringUtils.isNullOrEmpty(  address ) ){
-                 urlBuild.append("&address=" + address ) ;
-            }
-
-
-
+            if(  !StringUtils.isNullOrEmpty( backup ) ){
+                urlBuild.append("&backup=" +  backup) ;
+           }
 		String result = sandGet( urlBuild.toString().trim() , this.accessKey , this.secretKey , GET   ) ;
 		try {
 			JSONObject  req   = new JSONObject( result ) ;
@@ -183,21 +177,21 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
             }
 			else{
                 JSONArray items =  req.getJSONObject(DATA).getJSONArray( ITEMS ) ;
-                List<BFScene_Implement>bf_secelist =   new ArrayList<>();
+                List<BFGroup_Implement>bf_secelist =   new ArrayList<>();
                 for( int i = 0 ; i < items.length() ; i ++   ){
-                    bf_secelist.add(  BFObjFactory.createBFScene((BFOpenAPI_Implement) createBFOpenAPInstance( this.accessKey , this.secretKey  ),items.getJSONObject(i).getString("o_senceId")   )  ) ;
+                    bf_secelist.add(  BFObjFactory.createBFGroup((BFOpenAPI_Implement) createBFOpenAPInstance( this.accessKey , this.secretKey  ),items.getJSONObject(i).getString("o_groupId")   )  ) ;
                 }
-                return PageParam.getSencePageResult( req.getJSONObject(DATA) , bf_secelist   );
+                return PageParam.getgroupPageResult( req.getJSONObject(DATA) , bf_secelist   );
             }
 		}catch (JSONException   jsonex){
-            throw new BFException(BFException.ERRORS.HTTP_ERROR, "server senceList return bad json");
+            throw new BFException(BFException.ERRORS.HTTP_ERROR, "server groupList return bad json");
 		}
 	}
 
 	/**
 	 *
 	 * 用户创建场景
-	 * @param sceneName 场景名称
+	 * @param groupName 场景名称
 	 * @param address 地址
 	 * @param province 省份
 	 * @param city 城市
@@ -205,87 +199,87 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 	 * @return
 	 * @throws BFException
 	 */
-	public BFScene createScene(String sceneName, String address, String province, String city, String brand)
+	public BFGroup createGroup(String groupName, String address, String province, String city, String brand)
             throws BFException, ParseException {
-	    if(  StringUtils.isNullOrEmpty( sceneName  )||
+	    if(  StringUtils.isNullOrEmpty( groupName  )||
              StringUtils.isNullOrEmpty( address  )  ||
              StringUtils.isNullOrEmpty( province  ) ||
              StringUtils.isNullOrEmpty( city  ) ||
              StringUtils.isNullOrEmpty( brand  ) ){
-            throw new BFException(BFException.ERRORS.INVALID_CONTEXT, "create sence of param senceName , address ,province ,city,brand can't be blank ");
+            throw new BFException(BFException.ERRORS.INVALID_CONTEXT, "create group of param groupName , address ,province ,city,brand can't be blank ");
         }
         try {
 
-            JSONObject  senceEntity = new JSONObject() ;
-            senceEntity.put("senceName", sceneName);
-            senceEntity.put("address", address);
-            senceEntity.put("province", province);
-            senceEntity.put("city", city);
-            senceEntity.put("brand", brand);
-            String url = rootUrl + SENCE_CREATE ;
+            JSONObject  groupEntity = new JSONObject() ;
+            groupEntity.put("groupName", groupName);
+            groupEntity.put("address", address);
+            groupEntity.put("province", province);
+            groupEntity.put("city", city);
+            groupEntity.put("brand", brand);
+            String url = rootUrl + GROUP_CREATE ;
 
-            String req =  sandPost( url , accessKey ,secretKey ,senceEntity.toString() ,POST) ;
+            String req =  sandPost( url , accessKey ,secretKey ,groupEntity.toString() ,POST) ;
 
             JSONObject reqResult = new JSONObject( req ) ;
 
             if( reqResult.getString( CODE ).equals( OK) ){
                 //  通过 appFactory创建 BBFApp 对象
-                return  BFObjFactory. createBFScene((BFOpenAPI_Implement) createBFOpenAPInstance ( accessKey ,secretKey ),  reqResult.getString(DATA)   )   ;
+                return  BFObjFactory. createBFGroup((BFOpenAPI_Implement) createBFOpenAPInstance ( accessKey ,secretKey ),  reqResult.getString(DATA)   )   ;
 
             }
             else{
-                throw new BFException(BFException.ERRORS.SENCE_CREATE_ERROR, reqResult.getString(MESSAGE)  );
+                throw new BFException(BFException.ERRORS.GROUP_CREATE_ERROR, reqResult.getString(MESSAGE)  );
             }
 
         }catch (JSONException jsonex){
-            throw new BFException(BFException.ERRORS.HTTP_ERROR, "server createSence return bad json");
+            throw new BFException(BFException.ERRORS.HTTP_ERROR, "server creategroup return bad json");
         }
 	}
 
 	/**
 	 *
 	 * 单个删除场景
-	 * @param scence 删除一个百蝠场景，它所包含的安装位置以及安装位置上的识别结果都会被删除
+	 * @param group 删除一个百蝠场景，它所包含的安装位置以及安装位置上的识别结果都会被删除
 	 * @return
 	 * @throws BFException
 	 */
-	public boolean removeScene(BFScene scence) throws BFException {
-        if(  !scence.isValid() ){
+	public boolean removeGroup(BFGroup group) throws BFException {
+        if(  !group.isValid() ){
             throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid can't be blank");
         }
         try {
-            String resUrl = rootUrl + SENCE_DELETE + scence.uuid() + "/" + scence.lastUpdateTime() ;
+            String resUrl = rootUrl + GROUP_DELETE + group.uuid() + "/" + group.lastUpdateTime() ;
             String  req = sandGet( resUrl , accessKey ,secretKey , DELETE  ) ;
             JSONObject reqResult = new JSONObject( req  ) ;
             if( reqResult.getString(CODE).equals(OK)  ){
-                scence.destory();
+                group.destory();
                 return true ;
             }
             else
              throw new BFException(BFException.ERRORS.DELETE_ERROR,  reqResult.getString( DATA ) );
         }catch (JSONException jsonex){
         	jsonex.printStackTrace();
-			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server removeScene return bad json");
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server removeGroupsName return bad json");
         }
 	}
 
 	/**
 	 *
 	 * 用户批量删除场景 每次操作最大条数是20条
-	 * @param sceneList 删除多个百蝠场景，它们所包含的安装位置以及安装位置上的识别结果都会被删除
+	 * @param groupList 删除多个百蝠场景，它们所包含的安装位置以及安装位置上的识别结果都会被删除
 	 * @return
 	 * @throws BFException
 	 */
-	public boolean removeScenes(List<? extends BFScene> sceneList) throws BFException {
+	public boolean removeGroups(List<? extends BFGroup> groupList) throws BFException {
 
-        if( sceneList.size() > MAXLIMIT ){
-            throw new BFException(BFException.ERRORS.DELETE_ERROR,  "delete beach of sence max limit is " + MAXLIMIT );
+        if( groupList.size() > MAXLIMIT ){
+            throw new BFException(BFException.ERRORS.DELETE_ERROR,  "delete beach of group max limit is " + MAXLIMIT );
         }
-        sceneList.forEach(scence->{
+        groupList.forEach(group->{
             try {
 
-                if( removeScene(scence) ){
-					scence.destory();
+                if( removeGroup(group) ){
+					group.destory();
 				}
             } catch (BFException e) {
                 e.printStackTrace();
@@ -304,18 +298,18 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 	 * @return
 	 * @throws BFException
 	 */
-	public BFPage<? extends BFInstallSite> findInstallSiteByDeviceInfo(String deviceSN, String installKeywords , int pageNum, int limit)
+	public BFPage<? extends BFItem> findItemByDeviceInfo(String deviceSN, String itemKeywords , int pageNum, int limit)
             throws BFException, ParseException {
 		if(limit > MAXLIMIT)
-			throw new BFException(BFException.ERRORS.DELETE_ERROR,  " findInstallSiteByDeviceInfo max limit is " + MAXLIMIT );
-        StringBuilder   urlBuild = new StringBuilder( rootUrl + INSTALLSITE_LIST);
+			throw new BFException(BFException.ERRORS.DELETE_ERROR,  " findItemByDeviceInfo max limit is " + MAXLIMIT );
+        StringBuilder   urlBuild = new StringBuilder( rootUrl + ITEM_LIST);
                         urlBuild.append("?pageNum=" + pageNum);
                         urlBuild.append("&limit=" + limit ) ;
                         if( !StringUtils.isNullOrEmpty(  deviceSN ) ){
 							urlBuild.append("&deviceSN=" + deviceSN ) ;
 						}
-						if( !StringUtils.isNullOrEmpty( installKeywords ) ){
-							urlBuild.append("&installKeywords=" + installKeywords ) ;
+						if( !StringUtils.isNullOrEmpty( itemKeywords ) ){
+							urlBuild.append("&itemKeywords=" + itemKeywords ) ;
 						}
 
 
@@ -327,14 +321,14 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
             }
             else{
                 JSONArray items          =   req.getJSONObject(DATA).getJSONArray(ITEMS);
-                List<BFInstallSite_Implement>bf_locationlist =   new ArrayList<>();
+                List<BFItem_Implement>bf_itemlist =   new ArrayList<>();
                 for( int i = 0 ; i < items.length() ; i ++   ){
-                    bf_locationlist.add(  BFObjFactory.createBFInstallSite((BFOpenAPI_Implement) createBFOpenAPInstance( this.accessKey , this.secretKey  ),items.getString(i)  )  ) ;
+                    bf_itemlist.add(  BFObjFactory.createBFItem((BFOpenAPI_Implement) createBFOpenAPInstance( this.accessKey , this.secretKey  ),items.getString(i)  )  ) ;
                 }
-                return PageParam.getLocationePageResult( req.getJSONObject(DATA) , bf_locationlist   );
+                return PageParam.getLocationePageResult( req.getJSONObject(DATA) , bf_itemlist   );
             }
         }catch (JSONException   jsonex){
-            throw new BFException(BFException.ERRORS.INVALID_JSON, "server installSite return bad json");
+            throw new BFException(BFException.ERRORS.INVALID_JSON, "server ITEM return bad json");
         }
 
 	}
@@ -342,13 +336,13 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 	/**
 	 *
 	 * 模糊搜索匹配安装位置
-	 * @param installKeywords 安装说明中的关键字
+	 * @param itemKeywords 安装说明中的关键字
 	 * @return
 	 * @throws BFException
 	 */
-	public BFPage<? extends BFInstallSite> findInstallSiteByInstallDescrption(String installKeywords,int pageNum ,int limit) throws BFException, ParseException {
+	public BFPage<? extends BFItem> findItemByitemDescrption(String itemKeywords,int pageNum ,int limit) throws BFException, ParseException {
 
-		return findInstallSiteByDeviceInfo(null ,null , pageNum , limit );
+		return findItemByDeviceInfo(null ,null , pageNum , limit );
 	}
 
 	/**
@@ -447,7 +441,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 		try {
 		if (StringUtils.isNullOrEmpty(appKey.trim()) || appKey.trim().length() != 32)
 			throw new BFException(BFException.ERRORS.INVALID_UUID, "appKey不存在");
-		String url = rootUrl + SENCE_ENPOWER_APP_REMOVE + appKey;
+		String url = rootUrl + GROUP_ENPOWER_APP_REMOVE + appKey;
 		String req = sandGet(url, accessKey, secretKey, DELETE);
 		System.out.println("删除炒作结果 == " + req);
 		JSONObject reqResult = null;
@@ -467,18 +461,22 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 	}
 
 	@Override
-	public String getAuthorizedInstallSiteList( String senceId ) throws BFException {
+	public BFPage<String> getAuthorizedItemList( int pageNum , int limit , String groupId ) throws BFException, ParseException {
 	 try{
-			if(  StringUtils.isNullOrEmpty(  senceId.trim() ) ||  senceId.trim().length()!= 32 ){
+		 if(  StringUtils.isNullOrEmpty(  groupId.trim() ) ||  groupId.trim().length()!= 32 ){
 				throw new BFException(BFException.ERRORS.INVALID_UUID, "请求参数格式错误");
-			}
-			String url = rootUrl + SENCE_ENPOWER_INSTALL_LIST + senceId;
-			String req = sandGet(url, accessKey, secretKey, GET);
-			JSONObject reqResult = null;
+		 }
 
-			reqResult = new JSONObject(req);
+		 if(limit > MAXLIMIT)
+			 throw new BFException(BFException.ERRORS.DELETE_ERROR,  " getAuthorizedItemList max limit is " + MAXLIMIT );
+		 StringBuilder   urlBuild = new StringBuilder( rootUrl + GROUP_ENPOWER_item_LIST + groupId);
+						 urlBuild.append("?pageNum=" + pageNum);
+						 urlBuild.append("&limit=" + limit ) ;
+		 String req = sandGet( urlBuild.toString(), accessKey, secretKey, GET);
+		 com.alibaba.fastjson.JSONObject  reqResult = JSON.parseObject(  req ) ;
 			if (reqResult.getString(CODE).equals(OK)) {
-				return reqResult.get(  DATA ).toString();
+				List<String>itemList = com.alibaba.fastjson.JSONObject.parseArray( reqResult.getJSONObject(DATA).getString(ITEMS) ,String.class  ) ;
+				return PageParam.getAuthorizedItemListStr( reqResult.getJSONObject(DATA) , itemList   );
 			} else
 				throw new BFException(BFException.ERRORS.DELETE_ERROR, reqResult.getString(MESSAGE));
 	} catch (JSONException e) {

@@ -34,33 +34,33 @@ public class UriPathUtil {
     public static  final String APP_RESULTS              = "/app/setrecgonize/results"; //用户在 app 下某个场景给多给安装设备位置添加识别信息 api-m9firix0
 
 
-    // sence module
-    public static final String  SENCE_CREATE             = "/sence/create"; //user create secen --api-5ti6xvqi --test -ok
-    public static final String  SENCE_UPDATE             = "/sence/update"; //user update secen -- api-lhjmgj1o --test --ok
-    public static final String  SENCE_INFO               = "/sence/info/"; //user get sence info by sence_uuid --api-p4ntqajy --ok
-    public static final String  SENCE_DELETE             = "/sence/delete/"; // user delete sence by sence_uuid --api-1noqg82u --ok
-    public static final String  SENCE_LIST               = "/sence/list";  // get user sence list and query by keywords and bran an --ok
-    public static final String  SENCE_DEVICE_LIST        = "/sence/devicelist/"; // get all deviceList with sence_uuid  //api-qizriuy6 --ok
-    public static final String  SENCE_GENERATE_BOUNDCODE = "/sence/generate/boundcode/"; // update sence of boundId //api-f92nimme --ok
-    public static final String  SENCE_REMOVE_INSRALL     = "/sence/remove/locations"; // remove sence of inatll //api-2r8r148y -- no test
+    // group module
+    public static final String  GROUP_CREATE             = "/group/create"; //user create secen --api-5ti6xvqi --test -ok
+    public static final String  GROUP_UPDATE             = "/group/update"; //user update secen -- api-lhjmgj1o --test --ok
+    public static final String  GROUP_INFO               = "/group/info/"; //user get group info by group_uuid --api-p4ntqajy --ok
+    public static final String  GROUP_DELETE             = "/group/delete/"; // user delete group by group_uuid --api-1noqg82u --ok
+    public static final String  GROUP_LIST               = "/group/list";  // get user group list and query by keywords and bran an --ok
+    public static final String  GROUP_DEVICE_LIST        = "/group/devicelist/"; // get all deviceList with group_uuid  //api-qizriuy6 --ok
+    public static final String  GROUP_GENERATE_BOUNDCODE = "/group/generate/boundcode/"; // update group of boundId //api-f92nimme --ok
+    public static final String  GROUP_REMOVE_INSRALL     = "/group/remove/items"; // remove group of inatll //api-2r8r148y -- no test
 
 
-    //device and location module
-    public static final String  INSTALLSITE_LIST        = "/device/list";  // get user device and location of data list --//api-fkokvgfg --ok
-    public static final String  INSTALLSITE_INFO        = "/device/info/";//get device and location by uuid --//api-ivzlgphg //--ok
-    public static final String  INSTALLSITE_BOUND       = "/device/update"; //bound device with location    --- //api-4i2n1ig4--ok
-    public static final String  INSTALLSITE_UNBOUND     = "/device/relieve/"; //unbound device with location -- //api-3mslwg3u--ok
-    public static final String  INSTALLSITE_CREATEBEACH = "/device/create/beach"; //unbound device with location -- //api-qsp7aspw -- ok
+    //device and item module
+    public static final String  ITEM_LIST        = "/item/list";  // get user device and item of data list --//api-fkokvgfg --ok
+    public static final String  ITEM_INFO        = "/item/info/";//get device and item by uuid --//api-ivzlgphg //--ok
+    public static final String  ITEM_BOUND       = "/item/update"; //bound device with item    --- //api-4i2n1ig4--ok
+    public static final String  ITEM_UNBOUND     = "/item/relieve/"; //unbound device with item -- //api-3mslwg3u--ok
+    public static final String  ITEM_CREATEBEACH = "/item/create/beach"; //unbound device with item -- //api-qsp7aspw -- ok
 
-    //enpower sence
-    public static final String SENCE_ENPOWER_LIST        = "/enpower/enpowerlist"; //get senceEnpowerList by an app --api-3iln7b34 -- ok
-    public static final String SENCE_ENPOWER_APP_LIST    = "/enpower/app/list";  // get auth sence all of appKey api-3bypmv8s --ok
-    public static final String SENCE_ENPOWER_CREATE      = "/enpower/create"; // 场景授权给 app  ---api-ki9gmbms --ok
-    public static final String SENCE_ENPOWER_APP_DELETE  = "/enpower/delete/";// 移除场景授权 app -- api-ddhadobo --ok
-    public static final String SENCE_ENPOWER_APP_LISTVO  = "/enpower/enpowerapp/listinfo";//用户获取授权 app 列表详情  --api-cr0bx5ac --ok
-    public static final String SENCE_ENPOWER_APP_SENCELIST  = "/enpower/app/sence/list";//用户获取授权 app授权列表  --api-fke1jve6
-    public static final String SENCE_ENPOWER_APP_REMOVE  = "/enpower/app/remove/";//用户移除第三方被授权 app --api-71umagn6
-    public static final String SENCE_ENPOWER_INSTALL_LIST  = "/enpower/install/list/";//三方授权场景下面设备安装位置信息  api-q7yyphcc
+    //enpower group
+    public static final String GROUP_ENPOWER_LIST        = "/groupenpower/enpowerlist"; //get groupEnpowerList by an app --api-3iln7b34 -- ok
+    public static final String GROUP_ENPOWER_APP_LIST    = "/groupenpower/app/list";  // get auth group all of appKey api-3bypmv8s --ok
+    public static final String GROUP_ENPOWER_CREATE      = "/groupenpower/create"; // 场景授权给 app  ---api-ki9gmbms --ok
+    public static final String GROUP_ENPOWER_APP_DELETE  = "/groupenpower/delete/";// 移除场景授权 app -- api-ddhadobo --ok
+    public static final String GROUP_ENPOWER_APP_LISTVO  = "/groupenpower/enpowerapp/listinfo";//用户获取授权 app 列表详情  --api-cr0bx5ac --ok
+    public static final String GROUP_ENPOWER_APP_groupList  = "/groupenpower/app/group/list";//用户获取授权 app授权列表  --api-fke1jve6
+    public static final String GROUP_ENPOWER_APP_REMOVE  = "/groupenpower/app/remove/";//用户移除第三方被授权 app --api-71umagn6
+    public static final String GROUP_ENPOWER_item_LIST  = "/groupenpower/item/list/";//三方授权场景下面设备安装位置信息  api-q7yyphcc
 
 
 

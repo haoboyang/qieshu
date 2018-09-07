@@ -1,8 +1,8 @@
 package com.buyfull.openapiv1.implement;
 
 import com.buyfull.openapiv1.BFException;
-import com.buyfull.openapiv1.BFInstallSite;
-import com.buyfull.openapiv1.BFScene;
+import com.buyfull.openapiv1.BFItem;
+import com.buyfull.openapiv1.BFGroup;
 import com.buyfull.util.SignAndSend;
 import com.buyfull.util.StringUtils;
 import org.json.JSONException;
@@ -13,17 +13,17 @@ import static com.buyfull.util.UriPathUtil.*;
 import static com.buyfull.util.UriPathUtil.DATA;
 import static com.buyfull.util.UriPathUtil.MESSAGE;
 
-public class BFInstallSite_Implement extends BFObjBaseV1_Implement implements BFInstallSite {
+public class BFItem_Implement extends BFObjBaseV1_Implement implements BFItem {
 
-	private String sence_uuid ;
+	private String group_uuid ;
 
 	private String deviceSN ;
 
 	private Long boundSubCode ;
 
-	private String installDescrption ;
+	private String itemDescrption ;
 
-	public BFInstallSite_Implement(BFOpenAPI_Implement context, String uuid) throws BFException {
+	public BFItem_Implement(BFOpenAPI_Implement context, String uuid) throws BFException {
 		super(context, uuid);
 		// TODO Auto-generated constructor stub
 	}
@@ -34,16 +34,16 @@ public class BFInstallSite_Implement extends BFObjBaseV1_Implement implements BF
 	 * @return
 	 * @throws BFException
 	 */
-	public BFScene getScene() throws BFException, ParseException {
+	public BFGroup getGroup() throws BFException, ParseException {
 
-		if(StringUtils.isNullOrEmpty( sence_uuid ))
+		if(StringUtils.isNullOrEmpty( group_uuid ))
 			return null ;
 		BFOpenAPI_Implement api = (BFOpenAPI_Implement) getContext();
-		BFScene_Implement scence = BFObjFactory.createBFScene(  api, sence_uuid  );
-		return scence;
+		BFGroup_Implement group = BFObjFactory.createBFGroup(  api, group_uuid  );
+		return group;
 	}
-	public String getSenceId(){
-		return  this.sence_uuid;
+	public String getGroupId(){
+		return  this.group_uuid;
 	}
 
 	public Long getBoundSubCode() {
@@ -51,13 +51,13 @@ public class BFInstallSite_Implement extends BFObjBaseV1_Implement implements BF
 		return this.boundSubCode;
 	}
 
-	public String getInstallDescrption() {
+	public String getItemDescrption() {
 
-		return this.installDescrption;
+		return this.itemDescrption;
 	}
 
-	public void setInstallDescrption(String installDescrption) {
-		 this.installDescrption = installDescrption ;
+	public void setItemDescrption(String itemDescrption) {
+		 this.itemDescrption = itemDescrption ;
 
 	}
 
@@ -81,18 +81,18 @@ public class BFInstallSite_Implement extends BFObjBaseV1_Implement implements BF
 		BFOpenAPI_Implement api = (BFOpenAPI_Implement) getContext();
 
 		try {
-			String url = getContext().rootUrl() + INSTALLSITE_INFO + uuid ;
+			String url = getContext().rootUrl() + ITEM_INFO + uuid ;
 			String req = SignAndSend.sandGet( url ,api.accessKey ,api.secretKey ,GET   ) ;
 			JSONObject result = new JSONObject( req ) ;
 
 			if( result.getString(CODE).equals(OK) ){
 				this.deviceSN                     = result.getJSONObject(DATA).getString("seriaNo") ;
-				this.boundSubCode                 = result.getJSONObject(DATA).getLong("installNum") ;
-				this.uuid          			= result.getJSONObject(DATA).getString("uuid") ;
-				this.sence_uuid        			= result.getJSONObject(DATA).getString( "sence_uuid"   );
-				this.installDescrption     			= result.getJSONObject(DATA).optString("location");
-				this.createTime         = result.getJSONObject(DATA).optString("createTime");
-				this.lastUpdateTimeStamp 	=    result.getJSONObject(DATA).optLong("lastUpdateTime")   ;
+				this.boundSubCode                 = result.getJSONObject(DATA).getLong("itemNum") ;
+				this.uuid          			      = result.getJSONObject(DATA).getString("uuid") ;
+				this.group_uuid        			  = result.getJSONObject(DATA).getString( "group_uuid"   );
+				this.itemDescrption     		  = result.getJSONObject(DATA).optString("itemName");
+				this.createTime                   = result.getJSONObject(DATA).optString("createTime");
+				this.lastUpdateTimeStamp 	      = result.getJSONObject(DATA).optLong("lastUpdateTime")   ;
 			}
 			else
 				throw new BFException( BFException.ERRORS.FETCH_ERROR ,result.getString(MESSAGE)  ) ;
@@ -111,8 +111,8 @@ public class BFInstallSite_Implement extends BFObjBaseV1_Implement implements BF
 		this.deviceSN                  = null ;
 		this.uuid                      = null ;
 		this.boundSubCode              = null ;
-		this.installDescrption         = null ;
-		this.sence_uuid                = null ;
+		this.itemDescrption            = null ;
+		this.group_uuid                = null ;
 		super.destory();
 
 	}
@@ -150,7 +150,7 @@ public class BFInstallSite_Implement extends BFObjBaseV1_Implement implements BF
 			data.put("seriaNo",deviceSN);
 			data.put("lastUpdateTiem",this.lastUpdateTimeStamp);
 			BFOpenAPI_Implement api = (BFOpenAPI_Implement) getContext();
-			String url = getContext().rootUrl() + INSTALLSITE_BOUND;
+			String url = getContext().rootUrl() + ITEM_BOUND;
 			String req = SignAndSend.sandPost(url , api.accessKey , api.secretKey ,data.toString() ,PUT) ;
 		try {
 			JSONObject reqResult = new JSONObject( req ) ;
@@ -175,7 +175,7 @@ public class BFInstallSite_Implement extends BFObjBaseV1_Implement implements BF
 	 */
 	public boolean unbindDeviceSN() throws BFException, ParseException {
 		BFOpenAPI_Implement api = (BFOpenAPI_Implement) getContext();
-		String url = getContext().rootUrl() + INSTALLSITE_UNBOUND + uuid + "/" + String.valueOf(lastUpdateTime() );
+		String url = getContext().rootUrl() + ITEM_UNBOUND + uuid + "/" + String.valueOf(lastUpdateTime() );
 		String req = SignAndSend.sandGet(url , api.accessKey , api.secretKey , PUT) ;
 		try {
 			JSONObject reqResult = new JSONObject( req ) ;

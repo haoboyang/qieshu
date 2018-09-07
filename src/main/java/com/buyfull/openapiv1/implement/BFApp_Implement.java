@@ -170,20 +170,17 @@ public class BFApp_Implement extends BFObjBaseV1_Implement  implements BFApp {
 	 * @return
 	 * @throws BFException
 	 */
-	public BFPage<? extends BFScene> getAuthorizedSceneList(int pageNum ,int limit , String senceName , String brand , String address   ) throws BFException, ParseException {
+	public BFPage<? extends BFGroup> getAuthorizedgroupList(int pageNum ,int limit , String groupName , String backup    ) throws BFException, ParseException {
 		//BFOpenAPI_Implement api = (BFOpenAPI_Implement) getContext();
-		StringBuilder   urlBuild = new StringBuilder( getContext().rootUrl() + SENCE_ENPOWER_LIST);
+		StringBuilder   urlBuild = new StringBuilder( getContext().rootUrl() + GROUP_ENPOWER_LIST);
 						urlBuild.append("?pageNum=" + pageNum);
 						urlBuild.append("&limit=" + limit ) ;
 
-						if(!StringUtils.isNullOrEmpty( senceName)){
-							urlBuild.append("&senceName=" + senceName ) ;
+						if(!StringUtils.isNullOrEmpty( groupName)){
+							urlBuild.append("&groupName=" + groupName ) ;
 						}
-						if(!StringUtils.isNullOrEmpty( brand)){
-							urlBuild.append("&brand=" + brand ) ;
-						}
-						if(!StringUtils.isNullOrEmpty( address)){
-							urlBuild.append("&address=" + address ) ;
+						if(!StringUtils.isNullOrEmpty( backup)){
+							urlBuild.append("&backup=" + backup ) ;
 						}
 						urlBuild.append("&appId=" + uuid ) ;
 
@@ -196,40 +193,38 @@ public class BFApp_Implement extends BFObjBaseV1_Implement  implements BFApp {
 			}
 			else{
 				JSONArray items          =   req.getJSONObject(DATA).getJSONArray(ITEMS);
-				List<BFScene_Implement>bf_secelist =   new ArrayList<>();
+				List<BFGroup_Implement>bf_secelist =   new ArrayList<>();
 				for( int i = 0 ; i < items.length() ; i ++   ){
-					bf_secelist.add(  BFObjFactory.createBFScene((BFOpenAPI_Implement) createBFOpenAPInstance( getContext().accessKey() , getContext().secretKey() ),items.getJSONObject(i).getString("o_senceId")   )  ) ;
+					bf_secelist.add(  BFObjFactory.createBFGroup((BFOpenAPI_Implement) createBFOpenAPInstance( getContext().accessKey() , getContext().secretKey() ),items.getJSONObject(i).getString("o_groupId")   )  ) ;
 				}
-				return PageParam.getSencePageResult( req.getJSONObject(DATA) , bf_secelist   );
+				return PageParam.getgroupPageResult( req.getJSONObject(DATA) , bf_secelist   );
 			}
 		}catch (JSONException   jsonex) {
-			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server senceList return bad json");
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server groupList return bad json");
 		  }
 		}
 
 	/**
 	 *
 	 * app 下面某个场景下面的安装位置和识别结果(包括被授权的场景)
-	 * @param  scene 自已创建的场景或被授权使用的场景
+	 * @param  GroupName 自已创建的场景或被授权使用的场景
 	 * @return
 	 * @throws BFException
 	 */
-	public HashMap<BFInstallSite, List<String>> getRecgonizeResults( BFScene scene ) throws BFException, ParseException {
-		if( !isValid()||StringUtils.isNullOrEmpty(scene.uuid()  ) || scene.uuid().length()!=32){
-			throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid and sence_uuid can't be blank");
+	public HashMap<BFItem, List<String>> getRecgonizeResults( BFGroup GroupName ) throws BFException, ParseException {
+		if( !isValid()||StringUtils.isNullOrEmpty(GroupName.uuid()  ) || GroupName.uuid().length()!=32){
+			throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid and group_uuid can't be blank");
 		}
-         String url = getContext().rootUrl() + APP_TAG + uuid + "/" + scene.uuid() ;
+         String url = getContext().rootUrl() + APP_TAG + uuid + "/" + GroupName.uuid() ;
 		 String req = SignAndSend.sandGet( url ,getContext().accessKey() ,getContext().secretKey() , GET    ) ;
 		 try {
 			 JSONObject  reqResult = new JSONObject( req  ) ;
 			 if(  reqResult.getString(CODE).equals(OK) ){
-
 			 	JSONArray array =  reqResult.optJSONArray(  DATA  ) ;
-			 	HashMap<BFInstallSite,List<String>> results = new HashMap<>() ;
+				 HashMap<BFItem,List<String>> results = new HashMap<>() ;
 				  for ( int i = 0 ; i < array.length()  ; i ++  ){//(List<String>)
-					  results.put( BFObjFactory.createBFInstallSite((BFOpenAPI_Implement) getContext(), array.getJSONObject(i).getString("localtion_uuid")),com.alibaba.fastjson.JSONArray.parseArray(array.getJSONObject(i).getString("tag") ,String.class ) ); ;
+					  results.put( BFObjFactory.createBFItem((BFOpenAPI_Implement) getContext(), array.getJSONObject(i).getString("item_uuid")),com.alibaba.fastjson.JSONArray.parseArray(array.getJSONObject(i).getString("tag") ,String.class ) ); ;
 				  }
-
                 return results;
 			 }else{
 				 throw new BFException(BFException.ERRORS.NETWORK_ERROR, reqResult.getString(MESSAGE) );
@@ -243,29 +238,29 @@ public class BFApp_Implement extends BFObjBaseV1_Implement  implements BFApp {
 	/**
 	 *
 	 *
-	 * @param  scene 自已创建的场景或被授权使用的场景(  )
+	 * @param  GroupName 自已创建的场景或被授权使用的场景(  )
 	 * @param  results 此应用下针对一个场景每个安装位置设定的识别结果的集合，会在百蝠SDK中返回json字符串数组，例如["结果1","result 2"]
 	 * @return
 	 * @throws BFException
 	 */
-	public boolean setRecgonizeResults(BFScene scene, HashMap<BFInstallSite, List<String>> results) throws BFException {
-		if( !isValid()|| StringUtils.isNullOrEmpty( scene.uuid() ) || scene.uuid().length()!= 32 ){
-			throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid and sence_uuid can't be blank");
+	public boolean setRecgonizeResults(BFGroup GroupName, HashMap<BFItem, List<String>> results) throws BFException {
+		if( !isValid()|| StringUtils.isNullOrEmpty( GroupName.uuid() ) || GroupName.uuid().length()!= 32 ){
+			throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid and group_uuid can't be blank");
 		}
 		if(  results.isEmpty() ){
 			throw new BFException(BFException.ERRORS.INVALID_CONTEXT, "安装位置上面识别结果不能为空");
 		}
 		HashMap<String ,List<String>> data =new HashMap<>() ;
-		for( Map.Entry<BFInstallSite,List<String>> entry : results.entrySet() ){
+		for( Map.Entry<BFItem,List<String>> entry : results.entrySet() ){
 			data.put(  entry.getKey().uuid(),entry.getValue() ) ;
 		}
 		JSONObject tags = new JSONObject(  data ) ;
 		try {
 
 				JSONObject  dataObj = new JSONObject() ;
-				dataObj.put("senceId",scene.uuid()  );
+				dataObj.put("groupId",GroupName.uuid()  );
 				dataObj.put("appId",uuid ) ;
-				dataObj.put( "location_tag",tags.toString()  );
+				dataObj.put( "itemName_tag",tags.toString()  );
 				String url = getContext().rootUrl() + APP_RESULTS;
 				String req = SignAndSend.sandPost(   url , getContext().accessKey() ,getContext().secretKey() ,dataObj.toString() ,POST ) ;
 				JSONObject  reqResult = new JSONObject( req ) ;

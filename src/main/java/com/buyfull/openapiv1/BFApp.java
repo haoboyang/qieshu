@@ -1,7 +1,6 @@
 package com.buyfull.openapiv1;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -66,20 +65,20 @@ public interface BFApp extends  BFObjBaseV1{
 	 * @return 第三方授权给此应用的场景，不包括自我创建的场景
 	 * @throws BFException 服务器返回具体错误信息
 	 */
-	public BFPage<? extends BFScene> getAuthorizedSceneList( int pageNum ,int limit , String senceName , String brand , String address  ) throws BFException, ParseException;
+	public BFPage<? extends BFGroup> getAuthorizedgroupList( int pageNum ,int limit , String groupName , String backup  ) throws BFException, ParseException;
 ////////////////////////////////////////////////
 	/**
-	 * @param  scene 自已创建的场景或被授权使用的场景
+	 * @param  GroupName 自已创建的场景或被授权使用的场景
 	 * @return 此应用下针对一个场景的每个安装位置设定的识别结果的集合，会在百蝠SDK中返回json字符串数组，例如["结果1","result 2"]
 	 * @throws BFException
 	 */
-	public HashMap<BFInstallSite, List<String> > getRecgonizeResults(BFScene scene) throws BFException, ParseException;
+	public HashMap<BFItem, List<String> > getRecgonizeResults(BFGroup GroupName) throws BFException, ParseException;
 	/**
 	 * 完全覆盖设置此场景下的所有安装位置的识别结果
-	 * @param  scene 自已创建的场景或被授权使用的场景
+	 * @param  GroupName 自已创建的场景或被授权使用的场景
 	 * @param  results 此应用下针对一个场景每个安装位置设定的识别结果的集合，会在百蝠SDK中返回json字符串数组，例如["结果1","result 2"]
 	 * @return true为成功 false为失败
 	 * @throws BFException 服务器返回具体错误信息
 	 */
-	public boolean setRecgonizeResults(BFScene scene, HashMap<BFInstallSite, List<String> > results) throws BFException;
+	public boolean setRecgonizeResults(BFGroup GroupName, HashMap<BFItem, List<String> > results) throws BFException;
 }

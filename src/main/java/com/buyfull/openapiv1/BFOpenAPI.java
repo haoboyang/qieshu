@@ -1,5 +1,6 @@
 package com.buyfull.openapiv1;
 
+import com.buyfull.openapiv1.implement.BFItem_Implement;
 import org.json.JSONException;
 import java.io.IOException;
 import java.text.ParseException;
@@ -33,23 +34,22 @@ public interface BFOpenAPI {
 	 * @return 场景列表
 	 * @throws BFException 服务器返回具体错误信息
 	 */
-	public BFPage<? extends BFScene> getSceneList(int pageNum, int limit) throws BFException, ParseException;
+	public BFPage<? extends BFGroup> getGroupList(int pageNum, int limit) throws BFException, ParseException;
 	
 	/**
 	 * 通过关键子模糊查找相关的场景列表，不包含第三方授权的场景。关键字可多选，可为空字符串
-	 * @param name 场景名称
-	 * @param brand 品牌
-	 * @param address 地址，可包含城市省份
+	 * @param groupName 场景名称
+	 * @param backup 品牌
 	 * @param pageNum 结果分页返回，从1开始
 	 * @param limit 结果分页返回，每页返回limit条，范围 1 - 200
 	 * @return 场景列表
 	 * @throws BFException 服务器返回具体错误信息
 	 */
-	public BFPage<? extends BFScene> findScenesByKeyword(String name, String brand, String address, int pageNum, int limit) throws BFException, ParseException;
+	public BFPage<? extends BFGroup> findGroupsByKeyword(String groupName, String backup,  int pageNum, int limit) throws BFException, ParseException;
 
 	/**
 	 * 在当前帐号下创建一个百蝠场景
-	 * @param sceneName 场景名称
+	 * @param groupName 场景名称
 	 * @param address 地址
 	 * @param province 省份
 	 * @param city 城市
@@ -57,21 +57,21 @@ public interface BFOpenAPI {
 	 * @return 百蝠场景对象
 	 * @throws BFException 服务器返回具体错误信息
 	 */
-	public BFScene	createScene(String sceneName, String address, String province, String city, String brand) throws BFException, ParseException;
+	public BFGroup createGroup(String groupName, String address, String province, String city, String brand) throws BFException, ParseException;
 	
 	/**
-	 * @param scene 删除一个百蝠场景，它所包含的安装位置以及安装位置上的识别结果都会被删除
+	 * @param group 删除一个百蝠场景，它所包含的安装位置以及安装位置上的识别结果都会被删除
 	 * @return true为成功 false为失败
 	 * @throws BFException 服务器返回具体错误信息
 	 */
-	public boolean removeScene(BFScene scene) throws BFException;
+	public boolean removeGroup(BFGroup group) throws BFException;
 	
 	/**
-	 * @param sceneList 删除多个百蝠场景，它们所包含的安装位置以及安装位置上的识别结果都会被删除
+	 * @param groupList 删除多个百蝠场景，它们所包含的安装位置以及安装位置上的识别结果都会被删除
 	 * @return true为成功 false为失败
 	 * @throws BFException 服务器返回具体错误信息
 	 */
-	public boolean removeScenes(List<? extends BFScene> sceneList) throws BFException;
+	public boolean removeGroups(List<? extends BFGroup> groupList) throws BFException;
 	
 	//百蝠场景下安装位置的API
 	/**
@@ -82,15 +82,15 @@ public interface BFOpenAPI {
 	 * @return 安装位置列表
 	 * @throws BFException 服务器返回具体错误信息
 	 */
-	public BFPage<? extends BFInstallSite> findInstallSiteByDeviceInfo(String deviceSN, String installKeywords, int pageNum, int limit) throws BFException, ParseException;
+	public BFPage<? extends BFItem> findItemByDeviceInfo(String deviceSN, String itemKeywords, int pageNum, int limit) throws BFException, ParseException;
 
 	/**
 	 * 通过安装说明中的关键字来查找相对应的安装位置，不包含第三方授权的场景下的安装位置
-	 * @param installKeywords 安装说明中的关键字
+	 * @param itemKeywords 安装说明中的关键字
 	 * @return 安装位置列表
 	 * @throws BFException 服务器返回具体错误信息
 	 */
-	public BFPage<? extends BFInstallSite> findInstallSiteByInstallDescrption(String installKeywords,int pageNum,int limit) throws BFException, ParseException;
+	public BFPage<? extends BFItem> findItemByitemDescrption(String itemKeywords,int pageNum,int limit) throws BFException, ParseException;
 
 	//百蝠应用有关的API
 	/**
@@ -117,7 +117,7 @@ public interface BFOpenAPI {
      * @param appKey
      * @return
      */
-	public BFPage<String>getAuthAppSenceList( int pageNum , int limit , String appKey    ) throws BFException;
+	public BFPage<String>getAuthAppGroupList( int pageNum , int limit , String appKey    ) throws BFException;
 
 	/**
 	 * 创建一个百蝠应用
@@ -151,9 +151,9 @@ public interface BFOpenAPI {
 	/**
 	 *
 	 * 用户获取被app 被授权场景下面安装位置列表
-	 * @param senceId
+	 * @param groupId
 	 * @return
 	 */
-	String getAuthorizedInstallSiteList( String senceId     ) throws BFException;
+	BFPage<String> getAuthorizedItemList(int pageNum , int limit , String groupId ) throws BFException, ParseException;
 
 }

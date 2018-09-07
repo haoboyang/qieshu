@@ -48,7 +48,7 @@ public class SignAndSend {
             URLConnection connection = realUrl.openConnection();
             HttpURLConnection httpUrlCon = (HttpURLConnection)connection;
             // 设置通用的请求属性
-            httpUrlCon.setRequestProperty("Host", url);
+            httpUrlCon.setRequestProperty("Host", urlNameString);
           //  httpUrlCon.setRequestProperty("Accept", "text/html, */*; q=0.01");
             httpUrlCon.setRequestProperty("Source","source");
             httpUrlCon.setRequestProperty("Date",timeStr);
