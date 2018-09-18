@@ -156,4 +156,13 @@ public interface BFOpenAPI {
 	 */
 	BFPage<String> getAuthorizedItemList(int pageNum , int limit , String groupId ) throws BFException, ParseException;
 
+	/**
+	  * @Description:   通过groupId 和 设备序列号查找 ITEM 对象 Id
+	  * @Param:   groupId , deviceSN
+	  * @return: item_uuid
+	  * @Author: Kevin
+	  * @Date: 2018/9/18  13:22
+	  */
+    String getItemId( String groupId , String deviceSN    ) throws BFException;
+
 }

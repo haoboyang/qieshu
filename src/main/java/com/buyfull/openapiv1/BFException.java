@@ -23,7 +23,8 @@ public final class BFException extends IOException {
 		GROUP_UPDATE_ERROR,
 		FETCH_ERROR,
 		DELETE_ERROR,
-		DEVICE_BOUND_ERROR
+		DEVICE_BOUND_ERROR,
+		DATA_FORMAT_ERROR
 	}
 	
 	ERRORS errCode;

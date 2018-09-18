@@ -8,13 +8,16 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.buyfull.openapiv1.*;
 import com.buyfull.util.PageParam;
+import com.buyfull.util.ResultCode;
 import com.buyfull.util.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import static com.buyfull.openapiv1.BFOpenAPIManager.createBFOpenAPInstance;
+import static com.buyfull.util.ResultCode.GROUP_DATA_ERROR;
 import static com.buyfull.util.SignAndSend.sandPost;
 import static com.buyfull.util.SignAndSend.sandGet;
+import static com.buyfull.util.StringUtils.checkDeviceSN;
 import static com.buyfull.util.UriPathUtil.*;
 
 public class BFOpenAPI_Implement implements BFOpenAPI{
@@ -419,7 +422,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 	public boolean removeApp(BFApp app) throws BFException {
       try {
 
-		  if( StringUtils.isNullOrEmpty( app.getAppKey().trim() ) || app.getAppKey().trim().length()!=32)
+		  if( StringUtils.isNullOrEmpty( app.getAppKey() ) || app.getAppKey().length()!=32)
 			  throw new BFException(BFException.ERRORS.INVALID_UUID, "appKey 不存在");
 		  String  url =  rootUrl + APP_DELETE + app.getAppKey() + "/" + String.valueOf(app.getLastUpdateTime()) ;
 		  String  req = sandGet( url , accessKey ,secretKey , DELETE  ) ;
@@ -439,7 +442,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 	@Override
 	public boolean removeAuthorizedApp(String appKey) throws BFException {
 		try {
-		if (StringUtils.isNullOrEmpty(appKey.trim()) || appKey.trim().length() != 32)
+		if (StringUtils.isNullOrEmpty(appKey) || appKey.length() != 32)
 			throw new BFException(BFException.ERRORS.INVALID_UUID, "appKey不存在");
 		String url = rootUrl + GROUP_ENPOWER_APP_REMOVE + appKey;
 		String req = sandGet(url, accessKey, secretKey, DELETE);
@@ -463,7 +466,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 	@Override
 	public BFPage<String> getAuthorizedItemList( int pageNum , int limit , String groupId ) throws BFException, ParseException {
 	 try{
-		 if(  StringUtils.isNullOrEmpty(  groupId.trim() ) ||  groupId.trim().length()!= 32 ){
+		 if(  StringUtils.isNullOrEmpty(  groupId ) ||  groupId.length()!= 32 ){
 				throw new BFException(BFException.ERRORS.INVALID_UUID, "请求参数格式错误");
 		 }
 
@@ -483,6 +486,30 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 		e.printStackTrace();
 		throw new BFException(BFException.ERRORS.HTTP_ERROR, "request server error" );
 	}
+	}
+
+	@Override
+	public String getItemId(String groupId, String deviceSN) throws BFException {
+		if(  StringUtils.isNullOrEmpty(  groupId ) ||  groupId.length()!= 32 ){
+			throw new BFException(BFException.ERRORS.INVALID_UUID, GROUP_DATA_ERROR.toString());
+		}
+		checkDeviceSN( deviceSN  ) ;
+        StringBuilder urlBuild = new StringBuilder( rootUrl ) ;
+					  urlBuild.append(  ITEM_GET_UUID   );
+					  urlBuild.append(  groupId ) ;
+					  urlBuild.append("/");
+					  urlBuild.append( deviceSN ) ;
+		String req = sandGet( urlBuild.toString(), accessKey, secretKey, GET);
+		try {
+			JSONObject reqresult = new JSONObject( req ) ;
+			if( reqresult.getString(CODE).equals(OK)  ){
+				return reqresult.getString( DATA ) ;
+			}else{
+				throw new BFException(BFException.ERRORS.DELETE_ERROR, req);
+			}
+		} catch (JSONException e) {
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
+		}
 	}
 
 

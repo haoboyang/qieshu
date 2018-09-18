@@ -43,6 +43,8 @@ public class UriPathUtil {
     public static final String  GROUP_DEVICE_LIST        = "/group/devicelist/"; // get all deviceList with group_uuid  //api-qizriuy6 --ok
     public static final String  GROUP_GENERATE_BOUNDCODE = "/group/generate/boundcode/"; // update group of boundId //api-f92nimme --ok
     public static final String  GROUP_REMOVE_INSRALL     = "/group/remove/items"; // remove group of inatll //api-2r8r148y -- no test
+    public static final String  GROUP_SETRESULT_SN       = "/group/setresult/sn" ;
+
 
 
     //device and item module
@@ -51,6 +53,7 @@ public class UriPathUtil {
     public static final String  ITEM_BOUND       = "/item/update"; //bound device with item    --- //api-4i2n1ig4--ok
     public static final String  ITEM_UNBOUND     = "/item/relieve/"; //unbound device with item -- //api-3mslwg3u--ok
     public static final String  ITEM_CREATEBEACH = "/item/create/beach"; //unbound device with item -- //api-qsp7aspw -- ok
+    public static final String  ITEM_GET_UUID    = "/item/result/uuid/" ; //get result of item uuid
 
     //enpower group
     public static final String GROUP_ENPOWER_LIST        = "/groupenpower/enpowerlist"; //get groupEnpowerList by an app --api-3iln7b34 -- ok

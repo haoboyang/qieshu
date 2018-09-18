@@ -1,5 +1,7 @@
 package com.buyfull.openapiv1;
 
+import com.buyfull.openapiv1.dao.DeviceResult;
+
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
@@ -118,4 +120,14 @@ public interface BFGroup extends BFObjBaseV1 {
 	  * @Date: 2018/9/4  10:28
 	  */
 	public boolean update(  String groupName ,String address , String province , String city , String brand  ) throws BFException, ParseException;
+	/**
+	  * @Description: 批量通过设备序列号设置设备识别结果,如果设备合法设备已经创建则直接设置识别结果(识别结果为空，则次设备之前数据位也将位空)
+	  *               如果设备没有创建此先创建设备,然后将再设置设备识别结果
+	  * @Param:
+	  * @return:
+	  * @Author: Kevin
+	  * @Date: 2018/9/14  10:18
+      */
+	public boolean setResultBySN ( List<DeviceResult>deviceResults , BFApp app ) throws BFException;
+
 }

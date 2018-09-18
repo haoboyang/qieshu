@@ -6,13 +6,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import com.alibaba.fastjson.JSON;
-import com.buyfull.openapiv1.BFException;
-import com.buyfull.openapiv1.BFGroup;
-import com.buyfull.openapiv1.BFItem;
-import com.buyfull.openapiv1.BFPage;
-import com.buyfull.util.PageParam;
-import com.buyfull.util.SignAndSend;
-import com.buyfull.util.StringUtils;
+import com.buyfull.openapiv1.*;
+import com.buyfull.openapiv1.dao.DeviceResult;
+import com.buyfull.util.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -135,6 +131,38 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
 		}
 	}
 
+
+	//[{"deviceSN":"2018072913674157", "itemDec":"A001" ,"result":["playerId=sifghsidfgisdnfigh"] }]
+	@Override
+	public boolean setResultBySN(List<DeviceResult>deviceResults , BFApp app ) throws BFException {
+       if( deviceResults == null || deviceResults.size() == 0  ){
+		   throw new BFException(BFException.ERRORS.DATA_FORMAT_ERROR, ResultCode.DEVICE_ITEM_TAGS_NOT_NULL.toString());
+	   }
+	   if( app == null  ){
+		   throw new BFException(BFException.ERRORS.DATA_FORMAT_ERROR,  ResultCode.BFAPP_NOT_NULL.toString() );
+	   }
+
+		com.alibaba.fastjson.JSONObject  results = new com.alibaba.fastjson.JSONObject() ;
+		results.put( "group_uuid" , this.uuid  ) ;
+		results.put( "appKey" , app.getAppKey() ) ;
+		results.put( "results", com.alibaba.fastjson.JSONArray.parseArray( JSON.toJSONString( deviceResults )));
+	   //调用 openapi
+		String url = getContext().rootUrl() + GROUP_SETRESULT_SN ;
+
+		String req =  sandPost( url , getContext().accessKey() ,getContext().secretKey() ,results.toString() ,POST) ;
+
+		try {
+			JSONObject reqResult  = new JSONObject( req );
+			if( reqResult.getString( CODE ).equals( OK)  ){
+				return true ;
+			}else{
+				throw new BFException(BFException.ERRORS.INVALID_WORK,  req );
+			}
+		} catch (JSONException e) {
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
+		}
+	}
+
 	@Override
 	public void destory(){
 		this.groupName     = null ;
@@ -177,8 +205,8 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
 
 			}
 		}catch (JSONException jsonex){
-			jsonex.printStackTrace();
-			throw new BFException(BFException.ERRORS.HTTP_ERROR ,"server getItemList return bad json"  );
+
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
 		}
 	}
 
@@ -210,7 +238,7 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
 				return getLocationePageResult( reqResult.getJSONObject(DATA)  ,  resultList  ) ;
 			}
 		} catch ( JSONException e ) {
-			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server getItemList return bad json");
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
 
 		}
 
@@ -469,12 +497,10 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
 			}
 			else{
 				System.out.println(  reqResult.toString()  );
-				throw new BFException(BFException.ERRORS.NETWORK_ERROR, reqResult.getString(MESSAGE)  );
+				throw new BFException(BFException.ERRORS.NETWORK_ERROR, req  );
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
-			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server removeAuthorizedApp return bad json");
-
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString()  );
 		}
 
 	}

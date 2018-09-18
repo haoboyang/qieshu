@@ -243,6 +243,7 @@ public class BFApp_Implement extends BFObjBaseV1_Implement  implements BFApp {
 	 * @return
 	 * @throws BFException
 	 */
+
 	public boolean setRecgonizeResults(BFGroup GroupName, HashMap<BFItem, List<String>> results) throws BFException {
 		if( !isValid()|| StringUtils.isNullOrEmpty( GroupName.uuid() ) || GroupName.uuid().length()!= 32 ){
 			throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid and group_uuid can't be blank");
@@ -255,6 +256,7 @@ public class BFApp_Implement extends BFObjBaseV1_Implement  implements BFApp {
 			data.put(  entry.getKey().uuid(),entry.getValue() ) ;
 		}
 		JSONObject tags = new JSONObject(  data ) ;
+
 		try {
 
 				JSONObject  dataObj = new JSONObject() ;

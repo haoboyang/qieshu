@@ -1,6 +1,9 @@
 package com.buyfull.util;
 
 
+import com.buyfull.openapiv1.BFException;
+
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.regex.Pattern;
 
@@ -15,6 +18,12 @@ import java.util.regex.Pattern;
 
 
 public final class StringUtils {
+
+    public final static int MAX_DEVICE_LENGTH = 16 ;
+
+    public final static int MAX_ITEMNAME_LENGTH = 35 ;
+
+    public final static int MAX_RESULT_LENGTH   = 4094;
 
     private StringUtils() {
     }
@@ -113,6 +122,41 @@ public final class StringUtils {
         }
         return false;
     }
+
+
+    public static void checkDeviceSN( String deviceSN  ) throws BFException {
+
+        if( StringUtils.isNullOrEmpty( deviceSN )  ){
+            throw new BFException(BFException.ERRORS.DATA_FORMAT_ERROR, "deviceSN can't be null " );
+        }
+
+        if( deviceSN.length() != MAX_DEVICE_LENGTH  ||!isInteger(deviceSN)){
+            throw new BFException(BFException.ERRORS.DATA_FORMAT_ERROR, "deviceSN data format error" );
+        }
+
+
+    }
+
+
+
+
+    public static void checkItemName( String itemDec ) throws BFException {
+        if( StringUtils.isNullOrEmpty( itemDec  )  ){
+            throw new BFException(BFException.ERRORS.DATA_FORMAT_ERROR, "itemDec can't be null " );
+        }
+
+        if( itemDec.length() > MAX_ITEMNAME_LENGTH   ){
+            throw new BFException(BFException.ERRORS.DATA_FORMAT_ERROR, "itemDec data format error" );
+        }
+    }
+
+    public static void ckeckResult( String[] result  ) throws BFException {
+        if( Arrays.toString(result  ).length()  > MAX_RESULT_LENGTH    ){
+            throw new BFException(BFException.ERRORS.DATA_FORMAT_ERROR, "result data format error ,max length is 4094" );
+        }
+    }
+
+
 
 
 
