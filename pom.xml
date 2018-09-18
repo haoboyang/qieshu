@@ -6,15 +6,15 @@
 
     <groupId>net.qieshu</groupId>
     <artifactId>qieshu-sdk</artifactId>
-    <version>1.8</version>
+    <version>1.9</version>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.9</source>
-                    <target>1.9</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -102,14 +102,9 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
