@@ -1,4 +1,4 @@
-package com.buyfull.util;
+package com.buyfull.openapiv1.implement.util;
 
 /**
  * ClassName UriPathUtil
@@ -44,6 +44,11 @@ public class UriPathUtil {
     public static final String  GROUP_GENERATE_BOUNDCODE = "/group/generate/boundcode/"; // update group of boundId //api-f92nimme --ok
     public static final String  GROUP_REMOVE_INSRALL     = "/group/remove/items"; // remove group of inatll //api-2r8r148y -- no test
     public static final String  GROUP_SETRESULT_SN       = "/group/setresult/sn" ;
+    //下面三个接口带调试
+    public static final String  GROUP_DYNAMIC_CREATE     = "/sound/make";  //--第三方动态业务创建
+    public static final String  GROUP_DYNAMIC_LIST       = "/group/dynamic/list/";  //--第三方动态业务创建
+    public static final String  GROUP_DYNAMIC_REMOVE       = "/group/remove/dynamic/items";  //--第三方动态业务创建
+
 
 
 

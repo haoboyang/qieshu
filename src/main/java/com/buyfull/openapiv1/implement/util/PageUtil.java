@@ -1,9 +1,9 @@
-package com.buyfull.util;
+package com.buyfull.openapiv1.implement.util;
 
 import com.buyfull.openapiv1.BFApp;
 import com.buyfull.openapiv1.BFPage;
-import com.buyfull.openapiv1.implement.BFApp_Implement;
 import org.json.JSONException;
+
 import java.util.List;
 
 /**
@@ -20,7 +20,7 @@ public class PageUtil {
 
     public static BFPage<? extends BFApp>getPageBean(  String result  ){
 
-        BFPage<BFApp_Implement>pageData= new BFPage<BFApp_Implement>() {
+        BFPage<BFApp>pageData= new BFPage<BFApp>() {
             @Override
             public int getCurrentPage() throws JSONException {
                 return 0;
@@ -47,7 +47,7 @@ public class PageUtil {
             }
 
             @Override
-            public List<BFApp_Implement> getResultList() {
+            public List<BFApp> getResultList() {
                 return null;
             }
         } ;

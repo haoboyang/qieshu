@@ -1,4 +1,4 @@
-package com.buyfull.util;
+package com.buyfull.openapiv1.implement.util;
 
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -10,14 +10,6 @@ import okhttp3.Response;
 import java.io.IOException;
 
 public class JsonUtil {
-
-
-
-
-
-
-
-
 
 	public static JSONObject getDataObj(String url, Call call) throws BFException{
 		try {

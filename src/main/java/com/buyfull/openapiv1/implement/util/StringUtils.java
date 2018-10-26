@@ -1,4 +1,4 @@
-package com.buyfull.util;
+package com.buyfull.openapiv1.implement.util;
 
 
 import com.buyfull.openapiv1.BFException;
@@ -24,6 +24,10 @@ public final class StringUtils {
     public final static int MAX_ITEMNAME_LENGTH = 35 ;
 
     public final static int MAX_RESULT_LENGTH   = 4094;
+
+    public final static int MAX_THIRD_SN   = 54;
+
+    public final static int MAX_THIRD_DEVICETYPE   = 10;
 
     private StringUtils() {
     }

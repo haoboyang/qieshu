@@ -7,20 +7,20 @@ import java.util.List;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.buyfull.openapiv1.*;
-import com.buyfull.util.PageParam;
-import com.buyfull.util.ResultCode;
-import com.buyfull.util.StringUtils;
+import com.buyfull.openapiv1.implement.util.PageParam;
+import com.buyfull.openapiv1.implement.util.ResultCode;
+import com.buyfull.openapiv1.implement.util.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import static com.buyfull.openapiv1.BFOpenAPIManager.createBFOpenAPInstance;
-import static com.buyfull.util.ResultCode.GROUP_DATA_ERROR;
-import static com.buyfull.util.SignAndSend.sandPost;
-import static com.buyfull.util.SignAndSend.sandGet;
-import static com.buyfull.util.StringUtils.checkDeviceSN;
-import static com.buyfull.util.UriPathUtil.*;
+import static com.buyfull.openapiv1.implement.BFOpenAPIManager.createBFOpenAPInstance;
+import static com.buyfull.openapiv1.implement.util.ResultCode.GROUP_DATA_ERROR;
+import static com.buyfull.openapiv1.implement.util.SignAndSend.sandPost;
+import static com.buyfull.openapiv1.implement.util.SignAndSend.sandGet;
+import static com.buyfull.openapiv1.implement.util.StringUtils.checkDeviceSN;
+import static com.buyfull.openapiv1.implement.util.UriPathUtil.*;
 
-public class BFOpenAPI_Implement implements BFOpenAPI{
+class BFOpenAPI_Implement implements BFOpenAPI{
 	String accessKey;
 	String secretKey;
     String rootUrl;
@@ -30,12 +30,9 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 		this.secretKey = secretKey;
 		this.rootUrl   = rootUrl ;
 	}
-	
-	public void destory(){
-		// TODO Auto-generated method stub
-	}
+
 	//////////////////////////////////////////////////////////////////
-	
+
 	//public interface methods
 
 	public String accessKey() {
@@ -49,6 +46,11 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 	@Override
 	public String rootUrl() {
 		return rootUrl;
+	}
+
+	@Override
+	public BFGroup getGroup( String groupId  ) throws ParseException, BFException {
+		return BFObjFactory.createBFGroup( this, groupId   );
 	}
 
 	/**
@@ -74,7 +76,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
             }
 		    JSONArray items =  data.getJSONObject(DATA).getJSONArray(ITEMS) ;
 			//List<BFApp_Implement> list = JsonMapper.jsonToObject( item , new TypeReference<List<BFApp_Implement>>() {});
-			List<BFApp_Implement> bf_appList = new ArrayList<BFApp_Implement>() ;
+			List<BFApp> bf_appList = new ArrayList<BFApp>() ;
 
 
 			//BFPage_Implement pageData = new BFPage_Implement( data.get()     ) ;
@@ -180,7 +182,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
             }
 			else{
                 JSONArray items =  req.getJSONObject(DATA).getJSONArray( ITEMS ) ;
-                List<BFGroup_Implement>bf_secelist =   new ArrayList<>();
+                List<BFGroup>bf_secelist =   new ArrayList<>();
                 for( int i = 0 ; i < items.length() ; i ++   ){
                     bf_secelist.add(  BFObjFactory.createBFGroup((BFOpenAPI_Implement) createBFOpenAPInstance( this.accessKey , this.secretKey  ),items.getJSONObject(i).getString("o_groupId")   )  ) ;
                 }
@@ -255,7 +257,6 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
             String  req = sandGet( resUrl , accessKey ,secretKey , DELETE  ) ;
             JSONObject reqResult = new JSONObject( req  ) ;
             if( reqResult.getString(CODE).equals(OK)  ){
-                group.destory();
                 return true ;
             }
             else
@@ -282,7 +283,6 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
             try {
 
                 if( removeGroup(group) ){
-					group.destory();
 				}
             } catch (BFException e) {
                 e.printStackTrace();
@@ -324,7 +324,7 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
             }
             else{
                 JSONArray items          =   req.getJSONObject(DATA).getJSONArray(ITEMS);
-                List<BFItem_Implement>bf_itemlist =   new ArrayList<>();
+                List<BFItem>bf_itemlist =   new ArrayList<>();
                 for( int i = 0 ; i < items.length() ; i ++   ){
                     bf_itemlist.add(  BFObjFactory.createBFItem((BFOpenAPI_Implement) createBFOpenAPInstance( this.accessKey , this.secretKey  ),items.getString(i)  )  ) ;
                 }
@@ -412,6 +412,11 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 
 	}
 
+	@Override
+	public BFApp getApp( String appId ) throws ParseException, BFException {
+		return BFObjFactory.createBFApp( this,appId    );
+	}
+
 	/**
 	 *
 	 *  用户单个删除 app
@@ -428,7 +433,6 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 		  String  req = sandGet( url , accessKey ,secretKey , DELETE  ) ;
 		  JSONObject reqResult = new JSONObject( req  ) ;
 		  if( reqResult.getString(CODE).equals(OK)  ){
-              app.destory() ;
 			  return true ;
 		  }
 		   else
@@ -446,7 +450,6 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 			throw new BFException(BFException.ERRORS.INVALID_UUID, "appKey不存在");
 		String url = rootUrl + GROUP_ENPOWER_APP_REMOVE + appKey;
 		String req = sandGet(url, accessKey, secretKey, DELETE);
-		System.out.println("删除炒作结果 == " + req);
 		JSONObject reqResult = null;
 
 			reqResult = new JSONObject(req);
@@ -486,6 +489,16 @@ public class BFOpenAPI_Implement implements BFOpenAPI{
 		e.printStackTrace();
 		throw new BFException(BFException.ERRORS.HTTP_ERROR, "request server error" );
 	}
+	}
+
+	@Override
+	public BFItem getBFItem(String bFItemId) throws ParseException, BFException {
+		return BFObjFactory.createBFItem( this , bFItemId   );
+	}
+
+	@Override
+	public BFDynamicDevice getBFDynamicItem(String bFItemId) throws ParseException, BFException {
+		return BFObjFactory.createBFDynamicDevice(   this ,bFItemId  );
 	}
 
 	@Override

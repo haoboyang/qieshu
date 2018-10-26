@@ -3,20 +3,21 @@ package com.buyfull.openapiv1.implement;
 import java.text.ParseException;
 import java.util.*;
 import com.buyfull.openapiv1.*;
-import com.buyfull.util.PageParam;
-import com.buyfull.util.SignAndSend;
-import com.buyfull.util.StringUtils;
+import com.buyfull.openapiv1.implement.util.PageParam;
+import com.buyfull.openapiv1.implement.util.ResultCode;
+import com.buyfull.openapiv1.implement.util.SignAndSend;
+import com.buyfull.openapiv1.implement.util.StringUtils;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import static com.buyfull.openapiv1.BFOpenAPIManager.createBFOpenAPInstance;
-import static com.buyfull.util.SignAndSend.sandGet;
-import static com.buyfull.util.TimeUtile.simpleDateFormat;
-import static com.buyfull.util.UriPathUtil.*;
+import static com.buyfull.openapiv1.implement.BFOpenAPIManager.createBFOpenAPInstance;
+import static com.buyfull.openapiv1.implement.util.SignAndSend.sandGet;
+import static com.buyfull.openapiv1.implement.util.TimeUtile.simpleDateFormat;
+import static com.buyfull.openapiv1.implement.util.UriPathUtil.*;
 
 
-public class BFApp_Implement extends BFObjBaseV1_Implement  implements BFApp {
+class BFApp_Implement extends BFObjBaseV1_Implement  implements BFApp {
 
 	String appKey;
 	@JsonProperty("secretKey")
@@ -30,27 +31,13 @@ public class BFApp_Implement extends BFObjBaseV1_Implement  implements BFApp {
 	String wxAppID;
 
 
-	public BFApp_Implement(BFOpenAPI_Implement context, String uuid) throws BFException {
+	BFApp_Implement(BFOpenAPI_Implement context, String uuid) throws BFException {
 		super(context, uuid);
 	}
 
-	public BFApp_Implement( ) throws BFException {
+	private BFApp_Implement( ) throws BFException {
 		super();
 
-	}
-
-
-
-	@Override
-	public void destory() {
-		appKey = null;
-		secKey = null;
-		appName = null;
-		appDescrption = null;
-		bundleID = null;
-		packageName = null;
-		wxAppID = null;
-		super.destory();
 	}
 	
 	public String getAppName() {
@@ -121,12 +108,10 @@ public class BFApp_Implement extends BFObjBaseV1_Implement  implements BFApp {
                 this.lastUpdateTimeStamp 	=  simpleDateFormat.parse( result.getJSONObject(DATA).optString("lastUpdateTime")).getTime()  ;
 			}
 			else
-				throw new BFException( BFException.ERRORS.FETCH_ERROR ,result.getString(MESSAGE)  ) ;
+				throw new BFException( BFException.ERRORS.FETCH_ERROR , req ) ;
 		} catch (JSONException e) {
-			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server return bad json");
-
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
 		}
-
 		return true;
 	}
 
@@ -159,7 +144,7 @@ public class BFApp_Implement extends BFObjBaseV1_Implement  implements BFApp {
 
 		}catch (JSONException ex){
 			ex.printStackTrace();
-			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server return bad json");
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
 		}
 	}
 
@@ -189,18 +174,19 @@ public class BFApp_Implement extends BFObjBaseV1_Implement  implements BFApp {
 		try {
 			JSONObject  req   = new JSONObject( result ) ;
 			if( !req.getString(CODE).equals(OK) ) {
-				throw new BFException(BFException.ERRORS.NETWORK_ERROR, req.getString(MESSAGE));
+				throw new BFException(BFException.ERRORS.NETWORK_ERROR, result);
 			}
 			else{
 				JSONArray items          =   req.getJSONObject(DATA).getJSONArray(ITEMS);
-				List<BFGroup_Implement>bf_secelist =   new ArrayList<>();
+				List<BFGroup>bf_secelist =   new ArrayList<>();
 				for( int i = 0 ; i < items.length() ; i ++   ){
 					bf_secelist.add(  BFObjFactory.createBFGroup((BFOpenAPI_Implement) createBFOpenAPInstance( getContext().accessKey() , getContext().secretKey() ),items.getJSONObject(i).getString("o_groupId")   )  ) ;
 				}
 				return PageParam.getgroupPageResult( req.getJSONObject(DATA) , bf_secelist   );
 			}
 		}catch (JSONException   jsonex) {
-			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server groupList return bad json");
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString());
+
 		  }
 		}
 
@@ -227,11 +213,11 @@ public class BFApp_Implement extends BFObjBaseV1_Implement  implements BFApp {
 				  }
                 return results;
 			 }else{
-				 throw new BFException(BFException.ERRORS.NETWORK_ERROR, reqResult.getString(MESSAGE) );
+				 throw new BFException(BFException.ERRORS.NETWORK_ERROR, req );
 
 			 }
 		 }catch (JSONException jsonEx){
-			 throw new BFException(BFException.ERRORS.HTTP_ERROR, "server return bad json");
+			 throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString());
 		 }
 	}
 
@@ -270,10 +256,10 @@ public class BFApp_Implement extends BFObjBaseV1_Implement  implements BFApp {
 					return true ;
 
 				}else{
-					throw new BFException(BFException.ERRORS.NETWORK_ERROR,reqResult.getString(MESSAGE)  );
+					throw new BFException(BFException.ERRORS.NETWORK_ERROR,req );
 				}
 			}catch (JSONException  jsonEx){
-				throw new BFException(BFException.ERRORS.HTTP_ERROR, "server return bad json");
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString());
 		}
 
 	}

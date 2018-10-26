@@ -1,4 +1,4 @@
-package com.buyfull.util;
+package com.buyfull.openapiv1.implement.util;
 
 import java.io.UnsupportedEncodingException;
 

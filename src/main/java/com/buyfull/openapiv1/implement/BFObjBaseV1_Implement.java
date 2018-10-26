@@ -5,11 +5,9 @@ import java.text.ParseException;
 import com.buyfull.openapiv1.BFException;
 import com.buyfull.openapiv1.BFObjBaseV1;
 import com.buyfull.openapiv1.BFOpenAPI;
-
-public class BFObjBaseV1_Implement implements BFObjBaseV1 {
+class BFObjBaseV1_Implement implements BFObjBaseV1 {
 	String uuid;
 	WeakReference<BFOpenAPI_Implement> context;
-	String cacheKey;
 	long lastUpdateTimeStamp;
 	boolean isReadOnly;
 	String createTime ;
@@ -30,38 +28,13 @@ public class BFObjBaseV1_Implement implements BFObjBaseV1 {
 		this.context = new WeakReference<BFOpenAPI_Implement>(context);
 		this.uuid = uuid;
 
-		cacheKey = context.accessKey() + context.secretKey() + uuid;
 	}
 
 	public BFOpenAPI getContext() {
 		return context.get();
 	}
 
-	@Override
-	public int hashCode() {
-		return cacheKey.hashCode();
-	}
-
-	public String getCacheKey(){
-		return cacheKey;
-	}
-	
-	public void destory() {
-		if (context != null && context.get() != null){
-			BFCacheManager.deleteCacheObj(context.get().accessKey() , cacheKey);
-			context = null;
-		}
-		
-		uuid = null;
-		cacheKey = null;
-		lastUpdateTimeStamp = 0;
-		createTime=null;
-	}
-
 	public boolean fetch() throws BFException, ParseException {
-
-
-
 
 		throw new BFException(BFException.ERRORS.UNKNOWN, "Not implemented");
 	}
@@ -100,8 +73,8 @@ public class BFObjBaseV1_Implement implements BFObjBaseV1 {
 	public boolean isValid() {
 		if (context == null || context.get() == null ||
 				uuid == null || uuid == "" ||
-				lastUpdateTimeStamp == 0 ||
-				cacheKey == null){
+				lastUpdateTimeStamp == 0
+				){
 			return false;
 		}
 		return true;

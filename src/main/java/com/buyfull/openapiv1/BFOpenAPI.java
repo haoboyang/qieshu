@@ -1,6 +1,5 @@
 package com.buyfull.openapiv1;
 
-import com.buyfull.openapiv1.implement.BFItem_Implement;
 import org.json.JSONException;
 import java.io.IOException;
 import java.text.ParseException;
@@ -11,6 +10,7 @@ import java.util.List;
  * 百蝠OPENAPI的入口功能集合
  */
 public interface BFOpenAPI {
+
 	//百蝠场景有关的API
 	/**
 	 * @return 当前环境中的百蝠帐号accessKey
@@ -27,6 +27,16 @@ public interface BFOpenAPI {
 	 * @return
 	 */
 	public String rootUrl() ;
+
+	/**
+	  * @Description: 通过 groupId 获取group Object
+	  * @Param:  group_uuid
+	  * @return:  BFGroup
+	  * @Author: Kevin
+	  * @Date: 2018/10/22  11:31
+	  */
+	public BFGroup getGroup( String groupId   ) throws ParseException, BFException;
+
 	/**
 	 * 返回当前帐号下自已创建的所有场景列表，不包含第三方授权的场景
 	 * @param pageNum 结果分页返回，从1开始
@@ -130,6 +140,8 @@ public interface BFOpenAPI {
 	 * @throws BFException 服务器返回具体错误信息
 	 */
 	public BFApp createApp(String appName, String descrption, String bundleID, String packageName, String wxAppID) throws BFException, JSONException, ParseException;
+
+	public BFApp getApp(  String appId   ) throws ParseException, BFException;
 	
 	/**
 	 * 删除一个百蝠应用，删除后其下设置的识别结果都会被删除
@@ -154,7 +166,18 @@ public interface BFOpenAPI {
 	 * @param groupId
 	 * @return
 	 */
-	BFPage<String> getAuthorizedItemList(int pageNum , int limit , String groupId ) throws BFException, ParseException;
+	public BFPage<String> getAuthorizedItemList(int pageNum , int limit , String groupId ) throws BFException, ParseException;
+
+	/**
+	  * @Description:  获取 BFItem Object
+	  * @Param:  BFItem_uuid
+	  * @return:  BFItem
+	  * @Author: Kevin
+	  * @Date: 2018/10/22  11:52
+	  */
+	public BFItem  getBFItem( String bFItemId  ) throws ParseException, BFException;
+
+	public BFDynamicDevice getBFDynamicItem( String bFItemId ) throws ParseException, BFException;
 
 	/**
 	  * @Description:   通过groupId 和 设备序列号查找 ITEM 对象 Id
@@ -163,6 +186,6 @@ public interface BFOpenAPI {
 	  * @Author: Kevin
 	  * @Date: 2018/9/18  13:22
 	  */
-    String getItemId( String groupId , String deviceSN    ) throws BFException;
+    public String getItemId( String groupId , String deviceSN    ) throws BFException;
 
 }

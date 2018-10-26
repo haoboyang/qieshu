@@ -1,7 +1,7 @@
 package com.buyfull.openapiv1.dao;
 
 import com.buyfull.openapiv1.BFException;
-import static com.buyfull.util.StringUtils.*;
+import static com.buyfull.openapiv1.implement.util.StringUtils.*;
 
 /**
  * ClassName DeviceResult

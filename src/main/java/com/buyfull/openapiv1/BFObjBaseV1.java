@@ -3,11 +3,9 @@ package com.buyfull.openapiv1;
 import java.text.ParseException;
 
 public interface BFObjBaseV1 {
+
 	public BFOpenAPI getContext();
-	/**
-	 * 销毁对象，释放内存
-	 */
-	public void destory();
+
 	/**
 	 * BFAPP, BFGroup, BFItem等对象的基本属性可以通过此方法获取数据
 	 * @return true为成功 false为失败

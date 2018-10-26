@@ -3,17 +3,20 @@ package com.buyfull.openapiv1.implement;
 import com.buyfull.openapiv1.BFException;
 import com.buyfull.openapiv1.BFItem;
 import com.buyfull.openapiv1.BFGroup;
-import com.buyfull.util.SignAndSend;
-import com.buyfull.util.StringUtils;
+import com.buyfull.openapiv1.implement.util.ResultCode;
+import com.buyfull.openapiv1.implement.util.SignAndSend;
+import com.buyfull.openapiv1.implement.util.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.text.ParseException;
-import static com.buyfull.util.StringUtils.isInteger;
-import static com.buyfull.util.UriPathUtil.*;
-import static com.buyfull.util.UriPathUtil.DATA;
-import static com.buyfull.util.UriPathUtil.MESSAGE;
 
-public class BFItem_Implement extends BFObjBaseV1_Implement implements BFItem {
+import static com.buyfull.openapiv1.implement.util.ResultCode.INVALID_ITEM;
+import static com.buyfull.openapiv1.implement.util.ResultCode.INVALID_ITEM_BOUND;
+import static com.buyfull.openapiv1.implement.util.StringUtils.isInteger;
+import static com.buyfull.openapiv1.implement.util.UriPathUtil.*;
+import static com.buyfull.openapiv1.implement.util.UriPathUtil.DATA;
+
+class BFItem_Implement extends BFObjBaseV1_Implement implements BFItem {
 
 	private String group_uuid ;
 
@@ -95,26 +98,12 @@ public class BFItem_Implement extends BFObjBaseV1_Implement implements BFItem {
 				this.lastUpdateTimeStamp 	      = result.getJSONObject(DATA).optLong("lastUpdateTime")   ;
 			}
 			else
-				throw new BFException( BFException.ERRORS.FETCH_ERROR ,result.getString(MESSAGE)  ) ;
+				throw new BFException( BFException.ERRORS.FETCH_ERROR ,req  ) ;
 		} catch (JSONException e) {
-			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server return bad json");
-
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
 		}
 
 		return true;
-	}
-
-
-	@Override
-	public void destory(){
-
-		this.deviceSN                  = null ;
-		this.uuid                      = null ;
-		this.boundSubCode              = null ;
-		this.itemDescrption            = null ;
-		this.group_uuid                = null ;
-		super.destory();
-
 	}
 
 	@Override
@@ -138,11 +127,11 @@ public class BFItem_Implement extends BFObjBaseV1_Implement implements BFItem {
 	public boolean bindDeviceSN(String deviceSN) throws BFException, JSONException, ParseException {
 
 	   if( deviceSN.length() !=16 || !isInteger(deviceSN)  ){
-		   throw new BFException(BFException.ERRORS.DEVICE_BOUND_ERROR, "设备序列号错误,请输入专业设备所属序列号");
+		   throw new BFException(BFException.ERRORS.DEVICE_BOUND_ERROR, INVALID_ITEM.toString());
 	   }
 	   //绑定设备
 		if( !StringUtils.isNullOrEmpty( getDeviceSN() ) ){
-			throw new BFException(BFException.ERRORS.DEVICE_BOUND_ERROR, "安装位置上面已经设备已绑定,请先解除绑定再操作");
+			throw new BFException(BFException.ERRORS.DEVICE_BOUND_ERROR, INVALID_ITEM_BOUND.toString());
 		}
        	//String url , String secretId, String secretKey , String  data
 			JSONObject  data = new JSONObject() ;
@@ -159,9 +148,9 @@ public class BFItem_Implement extends BFObjBaseV1_Implement implements BFItem {
 				return true;
 			}
 			else
-				throw new BFException(BFException.ERRORS.DEVICE_BOUND_ERROR,  reqResult.getString(MESSAGE));
+				throw new BFException(BFException.ERRORS.DEVICE_BOUND_ERROR,  req );
 		}catch (JSONException  jsonEx){
-			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server return bad json");
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
 		}
 
 	}
@@ -184,9 +173,9 @@ public class BFItem_Implement extends BFObjBaseV1_Implement implements BFItem {
 				return true;
 			}
 			else
-				throw new BFException(BFException.ERRORS.DEVICE_BOUND_ERROR,  reqResult.getString(MESSAGE));
+				throw new BFException(BFException.ERRORS.DEVICE_BOUND_ERROR,  req );
 		}catch (JSONException  jsonEx){
-			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server return bad json");
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
 		}
 	}
 

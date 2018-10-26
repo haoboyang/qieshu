@@ -7,21 +7,30 @@ import java.util.HashMap;
 import java.util.List;
 import com.alibaba.fastjson.JSON;
 import com.buyfull.openapiv1.*;
+import com.buyfull.openapiv1.dao.CodeType;
 import com.buyfull.openapiv1.dao.DeviceResult;
-import com.buyfull.util.*;
+import com.buyfull.openapiv1.implement.util.PageParam;
+import com.buyfull.openapiv1.implement.util.ResultCode;
+import com.buyfull.openapiv1.implement.util.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.buyfull.util.PageParam.getLocationePageResult;
-import static com.buyfull.util.SignAndSend.sandPost;
-import static com.buyfull.util.SignAndSend.sandGet;
-import static com.buyfull.util.TimeUtile.getDateStr;
-import static com.buyfull.util.UriPathUtil.*;
-import static com.buyfull.util.UriPathUtil.DATA;
-import static com.buyfull.util.UriPathUtil.MESSAGE;
+import static com.buyfull.openapiv1.dao.CodeType.A;
+import static com.buyfull.openapiv1.dao.CodeType.B;
+import static com.buyfull.openapiv1.implement.util.PageParam.getDynamicItem;
+import static com.buyfull.openapiv1.implement.util.PageParam.getLocationePageResult;
+import static com.buyfull.openapiv1.implement.util.ResultCode.*;
+import static com.buyfull.openapiv1.implement.util.SignAndSend.sandGet;
+import static com.buyfull.openapiv1.implement.util.SignAndSend.sandPost;
+import static com.buyfull.openapiv1.implement.util.StringUtils.MAX_THIRD_DEVICETYPE;
+import static com.buyfull.openapiv1.implement.util.StringUtils.MAX_THIRD_SN;
+import static com.buyfull.openapiv1.implement.util.TimeUtile.getDateStr;
+import static com.buyfull.openapiv1.implement.util.UriPathUtil.*;
+import static com.buyfull.openapiv1.implement.util.UriPathUtil.OK;
 
-public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup {
+
+class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup {
 
     private String groupName ;
 
@@ -63,7 +72,7 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
 
 		try {
 			String url = getContext().rootUrl() + GROUP_INFO + uuid ;
-			String req = SignAndSend.sandGet( url ,getContext().accessKey() ,getContext().secretKey() ,GET   ) ;
+			String req = sandGet( url ,getContext().accessKey() ,getContext().secretKey() ,GET   ) ;
 			JSONObject result = new JSONObject( req ) ;
 
 			if( result.getString(CODE).equals(OK) ){
@@ -76,9 +85,9 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
 				this.lastUpdateTimeStamp 	=    result.getJSONObject(DATA).optLong("lastUpdateTime")   ;
 			}
 			else
-				throw new BFException( BFException.ERRORS.FETCH_ERROR ,result.getString(MESSAGE)  ) ;
+				throw new BFException( BFException.ERRORS.FETCH_ERROR ,req ) ;
 		} catch (JSONException e) {
-			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server return bad json");
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString());
 		}
 
 		return true;
@@ -100,7 +109,7 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
 				StringUtils.isNullOrEmpty( city  ) ||
 				StringUtils.isNullOrEmpty( brand  )||
 				lastUpdateTimeStamp== 0 ) {
-			throw new BFException(BFException.ERRORS.INVALID_CONTEXT, "update group of param groupName , address ,province ,city,brand can't be blank ");
+			throw new BFException(BFException.ERRORS.INVALID_CONTEXT, INVALID_GROUP_CONTEXT.toString());
 		}
 		try {
 
@@ -123,11 +132,10 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
 				return  fetch();
 			}
 			else{
-				throw new BFException(BFException.ERRORS.GROUP_UPDATE_ERROR, reqResult.getString(MESSAGE)  );
+				throw new BFException(BFException.ERRORS.GROUP_UPDATE_ERROR, req  );
 			}
-
 		}catch (JSONException jsonex){
-			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server creategroup return bad json");
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString());
 		}
 	}
 
@@ -156,24 +164,139 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
 			if( reqResult.getString( CODE ).equals( OK)  ){
 				return true ;
 			}else{
-				throw new BFException(BFException.ERRORS.INVALID_WORK,  req );
+				throw new BFException(BFException.ERRORS.NETWORK_ERROR,  req );
 			}
 		} catch (JSONException e) {
 			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
 		}
 	}
 
-	@Override
-	public void destory(){
-		this.groupName     = null ;
-		this.uuid          = null ;
-		this.backup      = null ;
-		this.boundCode     = null ;
-		super.destory();
 
-	}
+    @Override
+    public String loginDynamicDevice(BFApp app, String deviceSN, String deviceType, CodeType codeType) throws BFException {
+        if( !isValid() ){
+            throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid can't be blank");
+        }
+	     if( checkDynamicDeviceParam(  deviceSN , deviceType , codeType ) ){
+             com.alibaba.fastjson.JSONObject dynamicDevice = new com.alibaba.fastjson.JSONObject();
+             dynamicDevice.put("sn",deviceSN);
+             dynamicDevice.put("deviceType",deviceType);
+             dynamicDevice.put("codeType",codeType.getType());
+             dynamicDevice.put("groupId", uuid );
+             dynamicDevice.put("appId", app.getAppKey());
+             String url = getContext().rootUrl() + GROUP_DYNAMIC_CREATE ;
 
-	@Override
+             String req =  sandPost( url , getContext().accessKey() ,getContext().secretKey() ,dynamicDevice.toString() ,POST) ;
+
+             try {
+                 JSONObject reqResult  = new JSONObject( req );
+                 if( reqResult.getString( CODE ).equals( OK)  ){
+                     return reqResult.getString(  DATA ) ;
+                 }else{
+                     throw new BFException(BFException.ERRORS.NETWORK_ERROR,  req );
+                 }
+             } catch (JSONException e) {
+                 throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
+             }
+         }
+        throw new BFException(BFException.ERRORS.UNKNOWN,  ResultCode.GROUP_DATA_ERROR.toString() );
+    }
+
+
+    public boolean checkDynamicDeviceParam(  String deviceSN, String deviceType, CodeType codeType ) throws BFException {
+	    if( StringUtils.isNullOrEmpty( deviceSN  ) || StringUtils.isNullOrEmpty( deviceType  ) ||  codeType == null  ){
+            throw new BFException(BFException.ERRORS.PARAM_NULL_ERROR,  ResultCode.GROUP_DYNAMIC_PARAM_NULL.toString() );
+        }
+        if( codeType.getType() != A.getType() ){
+	    	if(codeType.getType() != B.getType() ){
+				throw new BFException(BFException.ERRORS.DYNAMIC_PARAM_ERROR,  ResultCode.GROUP_DYNAMIC_CODETYPE_ERROR.toString() );
+			}
+        }
+        return checkParamdeviceSN(  deviceSN , deviceType  );
+    }
+
+    public boolean checkParamdeviceSN( String deviceSN, String deviceType  ) throws BFException {
+
+	    if( deviceSN.length() > MAX_THIRD_SN  ){
+            throw new BFException(BFException.ERRORS.DYNAMIC_PARAM_ERROR,  ResultCode.GROUP_DYNAMIC_DEVICESN_ERROR.toString() );
+        }
+        if( deviceType.length() > MAX_THIRD_DEVICETYPE ){
+            throw new BFException(BFException.ERRORS.DYNAMIC_PARAM_ERROR,  ResultCode.GROUP_DYNAMIC_DEVICESNTYPE_ERROR.toString() );
+        }
+        return true ;
+    }
+
+    @Override
+    public BFPage<? extends BFDynamicDevice> getDynamicList(String itemDes, int pageNum, int limit) throws BFException, ParseException {
+        if( !isValid() ){
+            throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid can't be blank");
+        }
+	    if(  !StringUtils.isNullOrEmpty( itemDes  )  ){
+             if(itemDes.length() > MAX_THIRD_SN   ){
+                 throw new BFException(BFException.ERRORS.DYNAMIC_PARAM_ERROR,  ResultCode.GROUP_DYNAMIC_DEVICESN_ERROR.toString() );
+             }
+        }
+        StringBuilder   urlBuild  =  new StringBuilder( getContext().rootUrl() + GROUP_DYNAMIC_LIST + this.uuid )  ;
+        urlBuild.append("?pageNum=" + pageNum);
+        urlBuild.append("&limit=" + limit ) ;
+        if(!StringUtils.isNullOrEmpty( itemDes  )  ){
+            urlBuild.append("&itemName=" + itemDes ) ;
+        }
+        String req  = sandGet( urlBuild.toString() , getContext().accessKey() ,getContext().secretKey() ,GET  ) ;
+        try {
+
+            JSONObject reqResult = new JSONObject( req );
+            if(  reqResult.getString(CODE).equals( OK  )  ){
+                //create BFItem
+                List<BFDynamicDevice> resultList = new ArrayList<>() ;
+                JSONArray    reqList =  reqResult.getJSONObject(DATA).getJSONArray( ITEMS  );
+                for ( int i = 0 ; i < reqList.length() ; i ++ ) {
+                    resultList.add( BFObjFactory.createBFDynamicDevice((BFOpenAPI_Implement) getContext(), reqList.getString( i )   ) ) ;
+                }
+                return getDynamicItem( reqResult.getJSONObject(DATA)  ,  resultList  ) ;
+            }else {
+                throw new BFException(BFException.ERRORS.NETWORK_ERROR , req );
+            }
+        } catch ( JSONException e ) {
+            throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
+        }
+    }
+
+    @Override
+    public boolean removeDynamicDevices(List<? extends BFDynamicDevice> dynamicDevices) throws BFException {
+        if( !isValid() ){
+            throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid can't be blank");
+        }
+        if( dynamicDevices.isEmpty()|| dynamicDevices.size() > MAXLIMIT ){
+            throw new BFException(BFException.ERRORS.INVALID_WORK, " 设备安装位置不能为空且最大批量数为"+MAXLIMIT);
+        }
+        List<String>deviceIds = new ArrayList<>() ;
+        dynamicDevices.forEach(item->{
+            deviceIds.add( item.uuid() );
+        });
+        JSONObject data = new JSONObject() ;
+        try {
+            data.put( "groupId",uuid ) ;
+            data.put("itemNameUuid",deviceIds);
+        } catch (JSONException e) {
+            throw new BFException(BFException.ERRORS.INVALID_JSON, e.getMessage() );
+        }
+        String url = getContext().rootUrl() + GROUP_DYNAMIC_REMOVE ;
+        String req = sandPost( url , getContext().accessKey() ,getContext().secretKey(), data.toString(), POST   ) ;
+        try {
+            JSONObject reqResult = new JSONObject( req ) ;
+            //销毁对象
+            if( reqResult.getString(CODE).equals( OK) ){
+                return true ;
+            }else{
+                throw new BFException(BFException.ERRORS.NETWORK_ERROR, req );
+            }
+        }catch (JSONException jsonex){
+            throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
+        }
+    }
+
+    @Override
 	public boolean isValid() {
 		if (!super.isValid())
 			return false;
@@ -195,13 +318,13 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
 		try {
 
 			String url  = getContext().rootUrl() + GROUP_GENERATE_BOUNDCODE + uuid + "/" + lastUpdateTimeStamp ;
-			String req = SignAndSend.sandGet( url ,getContext().accessKey() ,getContext().secretKey() ,PUT  ) ;
+			String req = sandGet( url ,getContext().accessKey() ,getContext().secretKey() ,PUT  ) ;
 			             reqResult = new JSONObject( req  ) ;
 			if( reqResult.getString(CODE).equals(OK) ){
 				fetch();
 				return true ;
 			}else {
-				throw new BFException(BFException.ERRORS.NETWORK_ERROR ,reqResult.getString( MESSAGE )  );
+				throw new BFException(BFException.ERRORS.NETWORK_ERROR , req );
 
 			}
 		}catch (JSONException jsonex){
@@ -216,33 +339,35 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
 	 * @return
 	 * @throws BFException
 	 */
-	public BFPage<? extends BFItem> getItemList( int pageNum , int limit   ) throws BFException, ParseException {
+	public BFPage<? extends BFItem> getItemList( String itemDes , int pageNum , int limit   ) throws BFException, ParseException {
 		if( !isValid() ){
 			throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid can't be blank");
 		}
 		StringBuilder   urlBuild  =  new StringBuilder( getContext().rootUrl() + GROUP_DEVICE_LIST + this.uuid )  ;
 						urlBuild.append("?pageNum=" + pageNum);
 						urlBuild.append("&limit=" + limit ) ;
-		String req  = SignAndSend.sandGet( urlBuild.toString() , getContext().accessKey() ,getContext().secretKey() ,GET  ) ;
+        if(!StringUtils.isNullOrEmpty( itemDes  )  ){
+            urlBuild.append("&itemName=" + itemDes ) ;
+        }
+		String req  = sandGet( urlBuild.toString() , getContext().accessKey() ,getContext().secretKey() ,GET  ) ;
 		try {
 
 			JSONObject reqResult = new JSONObject( req );
 			if(  reqResult.getString(CODE).equals( OK  )  ){
 				//create BFItem
-				List<BFItem_Implement> resultList = new ArrayList<>() ;
+				List<BFItem> resultList = new ArrayList<>() ;
 				JSONArray    reqList =  reqResult.getJSONObject(DATA).getJSONArray( ITEMS  );
 
 				for ( int i = 0 ; i < reqList.length() ; i ++ ) {
 					resultList.add( BFObjFactory.createBFItem((BFOpenAPI_Implement) getContext(), reqList.getString( i )   ) ) ;
 				}
 				return getLocationePageResult( reqResult.getJSONObject(DATA)  ,  resultList  ) ;
+			}else {
+				throw new BFException(BFException.ERRORS.NETWORK_ERROR , req );
 			}
 		} catch ( JSONException e ) {
 			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
-
 		}
-
-		return null;
 	}
 
 	/**
@@ -275,10 +400,10 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
 			throws BFException {
 
 		if( !isValid() ){
-			throw new BFException(BFException.ERRORS.INVALID_UUID, " request uuid can't be blank");
+			throw new BFException(BFException.ERRORS.INVALID_UUID, INVALID_UUID_GROUP_UUID.toString());
 		}
 		if( itemDescrptionList.isEmpty()|| itemDescrptionList.size() > MAXLIMIT ){
-			throw new BFException(BFException.ERRORS.INVALID_WORK, " 设备安装位置不能为空且最大批量数为"+MAXLIMIT);
+			throw new BFException(BFException.ERRORS.INVALID_WORK, INVALID_ERROR_MAXLIMIT.toString()  );
 		}
 
         String url  = getContext().rootUrl()  + ITEM_CREATEBEACH ;
@@ -291,7 +416,7 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
 			JSONObject  data = new JSONObject() ;
 			data.put( "group_uuid" ,uuid ) ;
 			data.put( "itemDescrptio" , 	JSON.toJSONString(  itemDescrptionList  ) ) ;
-			String req = SignAndSend.sandPost(  url ,getContext().accessKey() ,getContext().secretKey() , data.toString() ,POST );
+			String req = sandPost(  url ,getContext().accessKey() ,getContext().secretKey() , data.toString() ,POST );
 			JSONObject reqResult = new JSONObject( req ) ;
 
 			if( reqResult.getString(CODE ).equals(  OK )  ){
@@ -305,15 +430,13 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
 				return ITEM_implements ;
 
 			}else{
-				throw new BFException(BFException.ERRORS.NETWORK_ERROR ,reqResult.getString( MESSAGE )  );
+				throw new BFException(BFException.ERRORS.NETWORK_ERROR , req  );
 			}
 		}catch ( JSONException jsonEx ){
-			throw new BFException(BFException.ERRORS.INVALID_JSON, "server getItemList return bad json");
-
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
 		} catch (ParseException e) {
 			e.printStackTrace();
-			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server createItemList return bad json");
-
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
 		}
 	}
 
@@ -356,23 +479,21 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
             throw new BFException(BFException.ERRORS.INVALID_JSON, e.getMessage() );
         }
         String url = getContext().rootUrl() + GROUP_REMOVE_INSRALL ;
-        String req = SignAndSend.sandPost( url , getContext().accessKey() ,getContext().secretKey(), data.toString(), POST   ) ;
+        String req = sandPost( url , getContext().accessKey() ,getContext().secretKey(), data.toString(), POST   ) ;
         try {
             JSONObject reqResult = new JSONObject( req ) ;
             //销毁对象
             if( reqResult.getString(CODE).equals( OK) ){
-            	destory();
 				islist.forEach(item->{
-					item.destory();
 				});
 
                 return true ;
             }else{
-                throw new BFException(BFException.ERRORS.NETWORK_ERROR, reqResult.getString( MESSAGE ) );
+                throw new BFException(BFException.ERRORS.NETWORK_ERROR, req );
 
             }
         }catch (JSONException jsonex){
-            throw new BFException(BFException.ERRORS.HTTP_ERROR, "server createItems return bad json");
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
 
         }
 	}
@@ -395,7 +516,7 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
 						urlBuild.append("?pageNum=" + pageNum);
 						urlBuild.append("&limit=" + limit ) ;
 						urlBuild.append("&groupUuid=" + uuid ) ;
-		String req  = SignAndSend.sandGet( urlBuild.toString() , getContext().accessKey() ,getContext().secretKey() ,GET  ) ;
+		String req  = sandGet( urlBuild.toString() , getContext().accessKey() ,getContext().secretKey() ,GET  ) ;
 		try {
 			JSONObject reqResult = new JSONObject( req );
 			if(  reqResult.getString(CODE).equals( OK  )  ) {
@@ -405,12 +526,12 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
 					list.add(jsonArray.getString(i));
 				}
 				return PageParam.getgroupauthAppkeys( reqResult.getJSONObject(DATA) , list );
+			}else{
+				throw new BFException(BFException.ERRORS.NETWORK_ERROR , req  );
 			}
 		} catch ( JSONException e ) {
-			throw new BFException(BFException.ERRORS.HTTP_ERROR, "server getItemList return bad json");
-
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
 		}
-		return null ;
 	}
 
 
@@ -461,7 +582,7 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
 
 			}
 			else{
-				throw new BFException(BFException.ERRORS.NETWORK_ERROR, reqResult.getString(MESSAGE)  );
+				throw new BFException(BFException.ERRORS.NETWORK_ERROR, req  );
 			}
 
 		}catch (JSONException jsonex){
@@ -496,7 +617,6 @@ public class BFGroup_Implement extends BFObjBaseV1_Implement implements BFGroup 
 				return  true ;
 			}
 			else{
-				System.out.println(  reqResult.toString()  );
 				throw new BFException(BFException.ERRORS.NETWORK_ERROR, req  );
 			}
 		} catch (JSONException e) {

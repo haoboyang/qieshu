@@ -1,13 +1,14 @@
-package com.buyfull.openapiv1;
+package com.buyfull.openapiv1.implement;
 
 import java.util.HashMap;
-import com.buyfull.openapiv1.implement.BFOpenAPI_Implement;
-import com.buyfull.util.StringUtils;
+
+import com.buyfull.openapiv1.BFOpenAPI;
+import com.buyfull.openapiv1.implement.util.StringUtils;
 
 public class BFOpenAPIManager {
-	public static final String ROOT_URL = "https://openapi.buyfull.cc/sandbox";
+	public static final String ROOT_URL = "https://openapi.buyfull.cc/openapi";
 
-	static HashMap<String, BFOpenAPI_Implement> instanceMap = new HashMap<String, BFOpenAPI_Implement>();
+	static HashMap<String, BFOpenAPI> instanceMap = new HashMap<String, BFOpenAPI>();
 	/**
 	 * 创建一个BFOpenAPI的实例，如果已经存在，会返回缓存的实例
 	 * @param accessKey 从百蝠帐号中获得
@@ -19,7 +20,7 @@ public class BFOpenAPIManager {
 			if (accessKey == null || accessKey == "" || secretKey == null || secretKey == "")
 				return null;
 			String instanceKey = accessKey+secretKey;
-			BFOpenAPI_Implement instance = instanceMap.get(instanceKey);
+			BFOpenAPI instance = instanceMap.get(instanceKey);
 			if (instance == null){
 				instance = new BFOpenAPI_Implement(accessKey, secretKey, ROOT_URL);
 				instanceMap.put(instanceKey, instance);
@@ -27,6 +28,7 @@ public class BFOpenAPIManager {
 			return instance;
 		}
 	}
+
 	/**
 	 * 创建一个BFOpenAPI的实例，如果已经存在，会返回缓存的实例
 	 * @param accessKey 从百蝠帐号中获得
@@ -39,7 +41,7 @@ public class BFOpenAPIManager {
 			if (accessKey == null || accessKey == "" || secretKey == null || secretKey == "")
 				return null;
 			String instanceKey = accessKey+secretKey;
-			BFOpenAPI_Implement instance = instanceMap.get(instanceKey);
+			BFOpenAPI instance = instanceMap.get(instanceKey);
 			if(  StringUtils.isNullOrEmpty( rootUrl  ) ){
 				rootUrl = rootUrl ;
 			}
@@ -65,12 +67,11 @@ public class BFOpenAPIManager {
 		synchronized(instanceMap){
 			if (accessKey == null || accessKey == "" || secretKey == null || secretKey == "")
 				return ;
-			
 			String instanceKey = accessKey+secretKey;
-			BFOpenAPI_Implement instance = instanceMap.get(instanceKey);
+			BFOpenAPI instance = instanceMap.get(instanceKey);
 			if (instance != null){
 				instanceMap.remove(instanceKey);
-				instance.destory();
+//				instance.destory();
 			}
 		}
 	}

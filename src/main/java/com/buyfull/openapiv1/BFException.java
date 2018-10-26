@@ -24,7 +24,9 @@ public final class BFException extends IOException {
 		FETCH_ERROR,
 		DELETE_ERROR,
 		DEVICE_BOUND_ERROR,
-		DATA_FORMAT_ERROR
+		DATA_FORMAT_ERROR,
+		PARAM_NULL_ERROR,
+		DYNAMIC_PARAM_ERROR
 	}
 	
 	ERRORS errCode;

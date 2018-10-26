@@ -1,4 +1,4 @@
-package com.buyfull.util;
+package com.buyfull.openapiv1.implement.util;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -12,10 +12,12 @@ import java.net.URLConnection;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import static com.buyfull.util.TimeUtile.getGMTTime;
-import static com.buyfull.util.UriPathUtil.DELETE;
-import static com.buyfull.util.UriPathUtil.POST;
-import static com.buyfull.util.UriPathUtil.PUT;
+
+import static com.buyfull.openapiv1.implement.util.TimeUtile.getGMTTime;
+import static com.buyfull.openapiv1.implement.util.UriPathUtil.DELETE;
+import static com.buyfull.openapiv1.implement.util.UriPathUtil.POST;
+import static com.buyfull.openapiv1.implement.util.UriPathUtil.PUT;
+
 
 public class SignAndSend {
     private static final String CONTENT_CHARSET = "UTF-8";
@@ -59,7 +61,6 @@ public class SignAndSend {
 
             String sig = sign(secretKey,timeStr);
             String authen = "hmac id=\""+secretId+"\", algorithm=\"hmac-sha1\", headers=\"date source\", signature=\""+sig+"\"";
-           // System.out.println("authen --->" + authen);
             httpUrlCon.setRequestProperty("Authorization",authen);
             // 建立实际的连接
             httpUrlCon.connect();

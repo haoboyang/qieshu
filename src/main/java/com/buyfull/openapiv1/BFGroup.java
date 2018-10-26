@@ -1,5 +1,6 @@
 package com.buyfull.openapiv1;
 
+import com.buyfull.openapiv1.dao.CodeType;
 import com.buyfull.openapiv1.dao.DeviceResult;
 
 import java.text.ParseException;
@@ -50,7 +51,7 @@ public interface BFGroup extends BFObjBaseV1 {
 	 * @return 此场景下的所有安装位置列表
 	 * @throws BFException 服务器返回具体错误信息
 	 */
-	public BFPage<? extends BFItem> getItemList(int pageNum , int limit) throws BFException, ParseException;
+	public BFPage<? extends BFItem> getItemList(String itemDes ,int pageNum , int limit) throws BFException, ParseException;
 	
 	/**
 	 * 创建一个安装位置
@@ -129,5 +130,31 @@ public interface BFGroup extends BFObjBaseV1 {
 	  * @Date: 2018/9/14  10:18
       */
 	public boolean setResultBySN ( List<DeviceResult>deviceResults , BFApp app ) throws BFException;
+	/**
+	  * @Description: 第三方设备注册，获取箧书音频文件地址
+	  * @Param:  app-平台下注册的 app， deviceSN 设备序列码 ， deviceType 设备型号 ， codeType 1/2
+	  * @return: {"downloadurl":"https://cdn.buyfull.cc/A-2-50-MBM-201808027.wav?attname=","outtime":1540456680815}
+	  * @Author: Kevin
+	  * @Date: 2018/10/25  16:30
+	  */
+	public String loginDynamicDevice(  BFApp app ,String deviceSN , String deviceType , CodeType codeType    ) throws BFException;
+
+	/**
+	  * @Description:  itemDes 获取动态设备列表
+	  * @Param:
+	  * @return:
+	  * @Author: Kevin
+	  * @Date: 2018/10/25  17:30
+	  */
+	public BFPage<? extends BFDynamicDevice> getDynamicList( String itemDes ,int pageNum , int limit) throws BFException, ParseException;
+
+	/**
+	  * @Description:  删除动态三方设备
+	  * @Param:
+	  * @return:  ture/false
+	  * @Author: Kevin
+	  * @Date: 2018/10/25  17:35
+	  */
+	public boolean removeDynamicDevices( List<? extends BFDynamicDevice> dynamicDevices    ) throws BFException;
 
 }
