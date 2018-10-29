@@ -10,7 +10,7 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 4.提供设备内容识别设备管理
 5.提供第三方设备动态音频获取
 
-#安装
+##安装
 <dependency>
 			<groupId>net.qieshu</groupId>
 			<artifactId>qieshu-sdk</artifactId>
