@@ -186,6 +186,9 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 	BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey );      
 	BFApp      bfApp       = authManager.getApp( appKey);
 	BFPage<? extends BFGroup> pageAuthGroup =  bfApp.getAuthorizedgroupList(pageNum,limit,                      				                                             groupName,backup) ;
+	
+	
+	
 ```
 
 
@@ -319,6 +322,8 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 		  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
                   BFGroup    bfGroup     = authManager.getGroup( group_uuid  );
 		  BFPage<? extends BFDynamicDevice> dynamicList = bfGroup.getDynamicList(itemName ,pageNum , 											      limit ) ;
+		  
+		  
 
 ```
        
@@ -348,8 +353,8 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 		  BFPage<? extends BFItem> staticItemList = bfGroup.getItemList( itemName,pageNum ,limit ) ;
 		  List<BFItem> bfItemList = (List<BFItem>) staticItemList.getResultList();
 		  List<BFItem> removeList = new ArrayList<>() ;
-					removeList.add(bfItemList.get(0) ) ;
-					removeList.add(bfItemList.get(1) ) ;
+			       removeList.add(bfItemList.get(0) ) ;
+			removeList.add(bfItemList.get(1) ) ;
 		  boolean deleteStatus    =  bfGroup.removeItems( removeList  ) ; 
 
 ```
