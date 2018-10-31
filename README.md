@@ -185,7 +185,7 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 	
 	BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey );      
 	BFApp      bfApp       = authManager.getApp( appKey);
-	BFPage<? extends BFGroup> pageAuthGroup =  bfApp.getAuthorizedgroupList(pageNum,limit,                      				                                             groupName,backup) ;
+	BFPage<? extends BFGroup> pageAuthGroup =  bfApp.getAuthorizedgroupList(pageNum,limit,                       groupName,backup) ;
 	
 	
 	
@@ -224,7 +224,7 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 
 	  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey) ;
         try {
-            BFPage<? extends BFGroup> groupPage = authManager.findGroupsByKeyword( groupName , backup, 											   pageNum , limit );
+            BFPage<? extends BFGroup> groupPage = authManager.findGroupsByKeyword( groupName , backup, 		    pageNum , limit );
         } catch (BFException e) {
             e.getErrMsg() ;
         } catch (ParseException e) {
@@ -295,7 +295,7 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 	          BFGroup    bfGroup     = authManager.getGroup( group_uuid  ) ;		
 		  BFApp      app         = authManager.getApp( appKey ) ;
 		  String downloadUrl = bfGroup.loginDynamicDevice( app ,yourDeviceSN  ,
-								   yourDeviceType  ,CodeType.A ) ;
+		  yourDeviceType  ,CodeType.A ) ;
 		  System.out.println(  downloadUrl ) ;
 ```
 
@@ -321,7 +321,7 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
                   int    limit        = 200 ;
 		  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
                   BFGroup    bfGroup     = authManager.getGroup( group_uuid  );
-		  BFPage<? extends BFDynamicDevice> dynamicList = bfGroup.getDynamicList(itemName ,pageNum , 											      limit ) ;
+		  BFPage<? extends BFDynamicDevice> dynamicList = bfGroup.getDynamicList(itemName ,pageNum , 		       limit ) ;
 		  
 		  
 
@@ -369,7 +369,7 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
          	  
 		  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
                   BFGroup    bfGroup     = authManager.getGroup( group_uuid  );
-		  BFPage<? extends BFDynamicDevice> dynamicList = bfGroup.getDynamicList(itemName ,pageNum , 											      limit ) ;
+		  BFPage<? extends BFDynamicDevice> dynamicList = bfGroup.getDynamicList(itemName ,pageNum , 		       limit ) ;
                   List<BFDynamicDevice> bfItemList = (List<BFDynamicDevice>) dynamicList.getResultList() ;
                   List<BFDynamicDevice> removeList = new ArrayList<>() ;
 					removeList.add(bfItemList.get(0) ) ;
