@@ -286,7 +286,7 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
         
 ```
      
-### 识别组动态业务创建安装位置 `获取箧书动态音频文件下载地址`
+### 识别组动态业务创建安装位置 (`获取箧书动态音频文件下载地址`)
 
 ```java
 		  String secretId       = "secret id";
@@ -301,8 +301,8 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 		  String downloadUrl = bfGroup.loginDynamicDevice( app ,yourDeviceSN  ,
 								   yourDeviceType  ,CodeType.A );
 		  System.out.println(  downloadUrl );
-
 ```
+
 
 
 ### 获取识别组下面静态安装位置列表
