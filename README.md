@@ -173,6 +173,21 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
         }
 ```
 
+### 获取`app`被第三方授权识别组列表
+
+```java
+        String secretId     = "secret id" ;
+ 	String secretKey    = "secret key" ;
+        String groupName    = "" ;
+	String backup       = "" ;
+	String pageNum      = 1 ;
+	String limit        = 200 ;
+	
+	BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey );      
+	BFApp      bfApp       = authManager.getApp( appKey);
+	BFPage<? extends BFGroup> pageAuthGroup =  bfApp.getAuthorizedgroupList(pageNum,limit,                      				                                             groupName,backup) ;
+```
+
 
 ### 创建识别组 `group`
 ```java
@@ -254,49 +269,53 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
       
 ### 识别组添加静态业务安装位置
 ```java
-          String secretId     = "secret id";
-	  String secretKey    = "secret key";
-	  String group_uuid   = "your group key";
-          String itemDescrption  = "A001";
+          String secretId     = "secret id" ;
+	  String secretKey    = "secret key" ;
+	  String group_uuid   = "your group key" ;
+          String itemDescrption  = "A001" ;
           String deviceSN        = "2018062613427338"; //可以为空,部署时候绑定设备
 	  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
-	  BFGroup  bfGroup       = authManager.getGroup( group_uuid  );
+	  BFGroup  bfGroup       = authManager.getGroup( group_uuid  ) ;
 	  BFItem item            = bfGroup.createItem( itemDescrption , deviceSN  ) ;
         
 ```
      
 ### 识别组动态业务创建安装位置 (`获取箧书动态音频文件下载地址`)
 ```java
-		  String secretId       = "secret id";
-		  String secretKey      = "secret key";
-		  String group_uuid     = "your group key";
-		  String yourDeviceSN   = "M1123456789";
-		  String yourDeviceType = "MBM-M1";
+		  String secretId       = "secret id" ;
+		  String secretKey      = "secret key" ;
+		  String group_uuid     = "your group key" ;
+		  String yourDeviceSN   = "M1123456789" ;
+		  String yourDeviceType = "MBM-M1" ;
 		  
 	          BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
-	          BFGroup    bfGroup     = authManager.getGroup( group_uuid  );		
+	          BFGroup    bfGroup     = authManager.getGroup( group_uuid  ) ;		
 		  BFApp      app         = authManager.getApp( appKey ) ;
 		  String downloadUrl = bfGroup.loginDynamicDevice( app ,yourDeviceSN  ,
-								   yourDeviceType  ,CodeType.A );
-		  System.out.println(  downloadUrl );
+								   yourDeviceType  ,CodeType.A ) ;
+		  System.out.println(  downloadUrl ) ;
 ```
 
 
 
 ### 获取识别组下面静态安装位置列表
 ```java
-	          String secretId     = "secret id";
-		  String secretKey    = "secret key";
-		  String group_uuid   = "your group key";
+	          String secretId     = "secret id" ;
+		  String secretKey    = "secret key" ;
+		  String group_uuid   = "your group key" ;
+		  int    pageNum      = 1 ;
+                  int    limit        = 200 ;
 		  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
-                  BFGroup    bfGroup     = authManager.getGroup( group_uuid  );	
-		  BFPage<? extends BFItem> staticItemList = bfGroup.getItemList( itemName,pageNum ,limit );
+                  BFGroup    bfGroup     = authManager.getGroup( group_uuid  ) ;	
+		  BFPage<? extends BFItem> staticItemList = bfGroup.getItemList( itemName,pageNum ,limit ) ;
 ```
 ### 获取识别组下面动态安装位置列表
 ```java
-                  String secretId     = "secret id";
-		  String secretKey    = "secret key";
-		  String group_uuid   = "your group key";
+                  String secretId     = "secret id" ;
+		  String secretKey    = "secret key" ;
+		  String group_uuid   = "your group key" ;
+		  int    pageNum      = 1 ;
+                  int    limit        = 200 ;
 		  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
                   BFGroup    bfGroup     = authManager.getGroup( group_uuid  );
 		  BFPage<? extends BFDynamicDevice> dynamicList = bfGroup.getDynamicList(itemName ,pageNum , 											      limit ) ;
@@ -319,12 +338,13 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
        
 ### 批量移除识别组静态业务下面安装位置
 ```java
-                  String secretId     = "secret id";
-		  String secretKey    = "secret key";
-		  String group_uuid   = "your group key";
-         	  
+                  String secretId     = "secret id" ;
+		  String secretKey    = "secret key" ;
+		  String group_uuid   = "your group key" ;
+         	  int    pageNum      = 1 ;
+                  int    limit        = 200;
 		  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
-                  BFGroup    bfGroup     = authManager.getGroup( group_uuid  );
+                  BFGroup    bfGroup     = authManager.getGroup( group_uuid  ) ;
 		  BFPage<? extends BFItem> staticItemList = bfGroup.getItemList( itemName,pageNum ,limit ) ;
 		  List<BFItem> bfItemList = (List<BFItem>) staticItemList.getResultList();
 		  List<BFItem> removeList = new ArrayList<>() ;
@@ -336,20 +356,82 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 
 ### 批量移除识别组动态安装位置
 ```java
-                  String secretId     = "secret id";
-		  String secretKey    = "secret key";
-		  String group_uuid   = "your group key";
+                  String secretId     = "secret id" ;
+		  String secretKey    = "secret key" ;
+		  String group_uuid   = "your group key" ;
+		  int pageNum         = 1 ;
+                  int limit           = 200 ;
          	  
 		  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
                   BFGroup    bfGroup     = authManager.getGroup( group_uuid  );
 		  BFPage<? extends BFDynamicDevice> dynamicList = bfGroup.getDynamicList(itemName ,pageNum , 											      limit ) ;
-                  List<BFDynamicDevice> bfItemList = (List<BFDynamicDevice>) dynamicList.getResultList();
+                  List<BFDynamicDevice> bfItemList = (List<BFDynamicDevice>) dynamicList.getResultList() ;
                   List<BFDynamicDevice> removeList = new ArrayList<>() ;
 					removeList.add(bfItemList.get(0) ) ;
 					removeList.add(bfItemList.get(1) ) ;
 		  boolean deleteStatus  =  bfGroup.removeItems( removeList  ) ; 
 ```
-       
+
+### 第三方被授权`appKey`列表
+
+```java
+                  String secretId     = "secret id" ;
+		  String secretKey    = "secret key" ;
+		  String group_uuid   = "your group key" ;
+         	  int    pageNum      = 1 ;
+                  int    limit        = 200 ;
+		  BFOpenAPI  authManager    = createBFOpenAPInstance( secretId ,secretKey ) ;
+                  BFGroup    bfGroup        = authManager.getGroup( group_uuid  ) ;
+		  BFPage<String> authAppKey = bfGroup.addAuthorizedApp(pageNum , limit ) ;											      
+```
+
+
+
+### 获取安装位置详情
+```java
+	          String secretId     = "secret id";
+		  String secretKey    = "secret key";
+		  String item_uuid    = "your item key";
+         	  
+		  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
+		  BFItem     bfItem      =    authManager.getBFItem(  item_uuid );
+		  System.out.println(  " 识别组 groupId  "        + bfItem.getGroupId());
+                  System.out.println(  " 识别组对象 groupObj "     + bfItem.getGroup());
+                  System.out.println(  " 识别组安装位置名称 "       + bfItem.getItemDescrption() );
+                  System.out.println(  " 安装位置上面绑定设备 "     + bfItem.getDeviceSN() );
+                  System.out.println(  " 安装位置安装序号码 "       + bfItem.getBoundSubCode() ); 
+```
+
+### 解除安装位置静态设备绑定
+
+```java
+                  String secretId     = "secret id";
+		  String secretKey    = "secret key";
+		  String item_uuid    = "your item key";
+         	  
+		  BFOpenAPI  authManager   = createBFOpenAPInstance( secretId ,secretKey ) ;
+		  BFItem     bfItem        = authManager.getBFItem(  item_uuid );
+		  boolean    updateStatus  = bfItem.unbindDeviceSN() ;
+		  
+```
+
+### 安装位置绑定静态设备
+```java
+                  String secretId     = "secret id";
+		  String secretKey    = "secret key";
+		  String item_uuid    = "your item key";
+		  String deviceSN     = "2018062613427338";	
+         	  
+		  BFOpenAPI  authManager   = createBFOpenAPInstance( secretId ,secretKey ) ;
+		  BFItem     bfItem        = authManager.getBFItem(  item_uuid );
+		  boolean updateStatus = bfItem.bindDeviceSN( deviceSN ) ;			
+		  
+```
+
+
+
+
+
        
     
       
