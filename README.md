@@ -387,8 +387,42 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
                   int    limit        = 200 ;
 		  BFOpenAPI  authManager    = createBFOpenAPInstance( secretId ,secretKey ) ;
                   BFGroup    bfGroup        = authManager.getGroup( group_uuid  ) ;
-		  BFPage<String> authAppKey = bfGroup.addAuthorizedApp(pageNum , limit ) ;											      
+		  BFPage<String> authAppKey = bfGroup.getAuthorizedAppKeys(pageNum , limit ) ;											      
 ```
+
+
+### 将识别组授权给第三方`app`
+
+```java
+                  String secretId     = "secret id" ;
+		  String secretKey    = "secret key" ;
+		  String group_uuid   = "your group key" ;
+		  String appKey       = "other appKey";
+		  String backupName   = "back up the APP";
+		  Date   startDate    = new Date( System.currentTimeMillis() ) ; 
+		  Date   endDate      = new Date( System.currentTimeMillis() ) ; 	
+         	
+		  BFOpenAPI  authManager    = createBFOpenAPInstance( secretId ,secretKey ) ;
+                  BFGroup    bfGroup        = authManager.getGroup( group_uuid  ) ;
+                  boolean    createStatus   = bfGroup.addAuthorizedApp(appKey,backupName,startDate,endDate); 
+		   										      
+```
+
+
+### 将识别组取消授权第三方`app`
+
+```java
+                  String secretId     = "secret id" ;
+		  String secretKey    = "secret key" ;
+		  String group_uuid   = "your group key" ;
+		  String appKey       = "other appKey" ；	        	
+		  BFOpenAPI  authManager    = createBFOpenAPInstance( secretId ,secretKey ) ;
+                  BFGroup    bfGroup        = authManager.getGroup( group_uuid  ) ;
+                  boolean    deleteStauts  bfGroup.removeAuthorizedApp(appKey); 
+		   										      
+```
+
+
 
 
 
