@@ -20,17 +20,17 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 	  </dependency>
 ```
 
-## 注册调用`app`信息，获取识别 `(ak,sk)` 用于获取识别`token`
-### 注册调用`app`
+### 注册调用`app`信息，获取识别 `(ak,sk)` 用于获取识别`token`
+
 
 ```java
           String secretId     = "secret id";
 	  String secretKey    = "secret key";
-	  String appName = "声连码小程序";
-          String comment = "声连码小程序用途描述";
-          String bundleID = "com.qieshu.IOS.packageName"; //ios 包名
-          String packageName = "com.qieshu.IOS.packageName"; //ios 包名
-          String wxAppID = ""; //wxs1d3f1s3df13sdf 微信小程序 WXID , 如果是 WXID ， 其它两个包名不需要填写
+	  String appName      = "声连码小程序";
+          String comment      = "声连码小程序用途描述";
+          String bundleID     = "com.qieshu.IOS.packageName"; //ios 包名
+          String packageName  = "com.qieshu.IOS.packageName"; //ios 包名
+          String wxAppID      = ""; //wxs1d3f1s3df13sdf 微信小程序 WXID , 如果是 WXID ， 其它两个包名不需要填写
 	  
 	  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
           try {
@@ -141,8 +141,8 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
             BFApp    bfApp        = authManager.getApp( appKey);
             BFGroup  bfGroup      = authManager.getGroup(group_uuid);
             BFPage<? extends BFItem> itemPage = bfGroup.getItemList( itemName , pageNum , limit ) ;
-            List<? extends BFItem> itemList =itemPage.getResultList();
-            List<String> tags =  null ;
+            List<? extends BFItem>   itemList = itemPage.getResultList();
+            List<String>             tags     =  null ;
             HashMap<BFItem, List<String>> resultTags = new HashMap<>();
             for (BFItem bfItem : itemList) {
                 tags = new ArrayList<>() ;
@@ -151,7 +151,6 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
                 resultTags.put(  bfItem , tags  ); //总 tag字符长度不能超过4094
             }
             boolean setStatus = bfApp.setRecgonizeResults( bfGroup ,  resultTags    ) ;
-            System.out.println(  updateStatus );
         } catch (ParseException e) {
             e.printStackTrace();
         } catch (BFException e) {
@@ -188,7 +187,7 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 ```
 
 
-## 创建识别组
+### 创建识别组 `group`
 
 ```java
           String secretId     = "secret id";
@@ -199,15 +198,196 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
           String address   = "中兴路373号" ;
           String province  = "上海市" ;
           String city      = "静安区" ;
-          String brand     = "百蝠" ;
-	  
-          BFGroup group = authManager.createGroup( groupName , address , province , city , brand );
+          String brand     = "百蝠" ; 
+	  try {
+              BFGroup group = authManager.createGroup( groupName , address , province , city , brand );
+	  } catch (BFException e) {
+            e.printStackTrace();
+          } catch (ParseException e) {
+            e.printStackTrace();
+          }
 
 ```
 
-## 管理识别组
+### 获取识别组列表
 
-###  
+```java
+
+          String secretId     = "secret id";
+	  String secretKey    = "secret key";
+          int pageNum = 1 ;
+          int limit   = 200;
+          String groupName = ""; //根据场景名称搜索
+          String backup    = ""; //根据品牌,地区搜索
+
+	  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey) ;
+        try {
+            BFPage<? extends BFGroup> groupPage = authManager.findGroupsByKeyword( groupName , backup, 											   pageNum , limit );
+        } catch (BFException e) {
+            e.getErrMsg() ;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+```
+
+### 获取识别组对象
+
+```java
+
+          String secretId     = "secret id";
+	  String secretKey    = "secret key";
+          String group_uuid = "your group key";
+	  
+	  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
+          BFGroup  bfGroup       = authManager.getGroup( group_uuid  ); 
+	  System.out.println(  "this is groupName = " +  bfGroup.getGroupName() );
+          System.out.println(  "this is province ,city ,address ,brand obj   = " +  bfGroup.getBackup() );
+          System.out.println(  "this is boundcode = " +  bfGroup.getBoundCode() ); //场景安装码
+          System.out.println(  "this is uuid = " +  bfGroup.uuid() );
+
+```
+
+### 修改识别组
+
+    ```java
+          String secretId     = "secret id";
+	  String secretKey    = "secret key";
+	  String group_uuid   = "your group key";
+	  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
+	 //创建识别组描述参数
+	  String groupName = "中兴路店" ;
+          String address   = "中兴路373号" ;
+          String province  = "上海市" ;
+          String city      = "静安区" ;
+          String brand     = "百蝠" ; 
+	  try {
+	      BFGroup  bfGroup       = authManager.getGroup( group_uuid  );
+	      boolean updateStatus = bfGroup.update(  groupName , address , province , city , brand  ) ;
+	  } catch (BFException e) {
+            e.printStackTrace();
+          } catch (ParseException e) {
+            e.printStackTrace();
+          }
+      ```
+      
+### 识别组添加静态业务安装位置
+
+     ```java
+          String secretId     = "secret id";
+	  String secretKey    = "secret key";
+	  String group_uuid   = "your group key";
+          String itemDescrption  = "A001";
+          String deviceSN        = "2018062613427338"; //可以为空,部署时候绑定设备
+	  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
+	  BFGroup  bfGroup       = authManager.getGroup( group_uuid  );
+	  BFItem item            = bfGroup.createItem( itemDescrption , deviceSN  ) ;
+        
+     ```
+     
+### 识别组动态业务创建安装位置 `获取箧书动态音频文件下载地址`
+
+	```java
+		  String secretId       = "secret id";
+		  String secretKey      = "secret key";
+		  String group_uuid     = "your group key";
+		  String yourDeviceSN   = "M1123456789";
+		  String yourDeviceType = "MBM-M1";
+		  
+	          BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
+	          BFGroup    bfGroup     = authManager.getGroup( group_uuid  );		
+		  BFApp      app         = authManager.getApp( appKey ) ;
+		  String downloadUrl = bfGroup.loginDynamicDevice( app ,yourDeviceSN  ,
+								   yourDeviceType  ,CodeType.A );
+		  System.out.println(  downloadUrl );
+
+	```
+
+
+### 获取识别组下面静态安装位置列表
+
+	```java
+	          String secretId     = "secret id";
+		  String secretKey    = "secret key";
+		  String group_uuid   = "your group key";
+		  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
+                  BFGroup    bfGroup     = authManager.getGroup( group_uuid  );	
+		  BFPage<? extends BFItem> staticItemList = bfGroup.getItemList( itemName,pageNum ,limit ) ;
+	```
+	
+### 获取识别组下面动态安装位置列表
+
+       ```java
+                  String secretId     = "secret id";
+		  String secretKey    = "secret key";
+		  String group_uuid   = "your group key";
+		  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
+                  BFGroup    bfGroup     = authManager.getGroup( group_uuid  );
+		  BFPage<? extends BFDynamicDevice> dynamicList = bfGroup.getDynamicList(itemName ,pageNum , 											      limit ) ;
+
+       ```
+       
+### 移除识别组下面静态安装位置 `如果有绑定设备，设置了识别内容都会被清空` 
+       
+     ```java
+                  String secretId     = "secret id";
+		  String secretKey    = "secret key";
+		  String group_uuid   = "your group key";
+         	  
+		  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
+                  BFGroup    bfGroup     = authManager.getGroup( group_uuid  );
+		  BFPage<? extends BFItem> staticItemList = bfGroup.getItemList( itemName,pageNum ,limit ) ;
+		  BFItem item =staticItemList.getResultList().get(0) ;	
+		  boolean deleteStatus   =   bfGroup.removeItem( item  ) ;
+
+       ```
+       
+### 批量移除识别组静态业务下面安装位置
+
+
+      ```java
+                  String secretId     = "secret id";
+		  String secretKey    = "secret key";
+		  String group_uuid   = "your group key";
+         	  
+		  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
+                  BFGroup    bfGroup     = authManager.getGroup( group_uuid  );
+		  BFPage<? extends BFItem> staticItemList = bfGroup.getItemList( itemName,pageNum ,limit ) ;
+		  List<BFItem> bfItemList = (List<BFItem>) staticItemList.getResultList();
+		  List<BFItem> removeList = new ArrayList<>() ;
+					removeList.add(bfItemList.get(0) ) ;
+					removeList.add(bfItemList.get(1) ) ;
+		  boolean deleteStatus    =  bfGroup.removeItems( removeList  ) ; 
+
+       ```
+
+### 批量移除识别组动态安装位置
+
+    
+      ```java
+                  String secretId     = "secret id";
+		  String secretKey    = "secret key";
+		  String group_uuid   = "your group key";
+         	  
+		  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
+                  BFGroup    bfGroup     = authManager.getGroup( group_uuid  );
+		  BFPage<? extends BFDynamicDevice> dynamicList = bfGroup.getDynamicList(itemName ,pageNum , 											      limit ) ;
+                  List<BFDynamicDevice> bfItemList = (List<BFDynamicDevice>) dynamicList.getResultList();
+                  List<BFDynamicDevice> removeList = new ArrayList<>() ;
+					removeList.add(bfItemList.get(0) ) ;
+					removeList.add(bfItemList.get(1) ) ;
+		  boolean deleteStatus  =  bfGroup.removeItems( removeList  ) ; 
+
+       ```
+       
+       
+    
+      
+
+
+
+
 
 
 
