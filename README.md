@@ -108,7 +108,7 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 
 ### 更新 `app`密钥
 
-     ```java
+```java
         String secretId     = "secret id";
 	String secretKey    = "secret key";
         String appKey       = "your appKey";
@@ -122,11 +122,11 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
         } catch (BFException e) {
             System.out.println(  e.getErrMsg() );
         }
-     ```
+```
           
 ### `app` 添加识别组内安装位置设置识别内容
 
-    ```java
+```java
     
         String secretId     = "secret id";
 	String secretKey    = "secret key";
@@ -157,7 +157,7 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
             System.out.println(  e.getErrMsg() );
         }        
     
-    ```
+```
 
 ### 获取 `app` 下某个识别组中安装位置里面的识别内容
 
@@ -251,7 +251,7 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 
 ### 修改识别组
 
-    ```java
+```java
           String secretId     = "secret id";
 	  String secretKey    = "secret key";
 	  String group_uuid   = "your group key";
@@ -270,11 +270,11 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
           } catch (ParseException e) {
             e.printStackTrace();
           }
-      ```
+```
       
 ### 识别组添加静态业务安装位置
 
-     ```java
+```java
           String secretId     = "secret id";
 	  String secretKey    = "secret key";
 	  String group_uuid   = "your group key";
@@ -284,11 +284,11 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 	  BFGroup  bfGroup       = authManager.getGroup( group_uuid  );
 	  BFItem item            = bfGroup.createItem( itemDescrption , deviceSN  ) ;
         
-     ```
+```
      
 ### 识别组动态业务创建安装位置 `获取箧书动态音频文件下载地址`
 
-	```java
+```java
 		  String secretId       = "secret id";
 		  String secretKey      = "secret key";
 		  String group_uuid     = "your group key";
@@ -302,23 +302,21 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 								   yourDeviceType  ,CodeType.A );
 		  System.out.println(  downloadUrl );
 
-	```
+```
 
 
 ### 获取识别组下面静态安装位置列表
-
-	```java
+```java
 	          String secretId     = "secret id";
 		  String secretKey    = "secret key";
 		  String group_uuid   = "your group key";
 		  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
                   BFGroup    bfGroup     = authManager.getGroup( group_uuid  );	
-		  BFPage<? extends BFItem> staticItemList = bfGroup.getItemList( itemName,pageNum ,limit ) ;
-	```
+		  BFPage<? extends BFItem> staticItemList = bfGroup.getItemList( itemName,pageNum ,limit ) ```
 	
 ### 获取识别组下面动态安装位置列表
 
-       ```java
+```java
                   String secretId     = "secret id";
 		  String secretKey    = "secret key";
 		  String group_uuid   = "your group key";
@@ -326,11 +324,11 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
                   BFGroup    bfGroup     = authManager.getGroup( group_uuid  );
 		  BFPage<? extends BFDynamicDevice> dynamicList = bfGroup.getDynamicList(itemName ,pageNum , 											      limit ) ;
 
-       ```
+```
        
 ### 移除识别组下面静态安装位置 `如果有绑定设备，设置了识别内容都会被清空` 
        
-     ```java
+```java
                   String secretId     = "secret id";
 		  String secretKey    = "secret key";
 		  String group_uuid   = "your group key";
@@ -341,12 +339,12 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 		  BFItem item =staticItemList.getResultList().get(0) ;	
 		  boolean deleteStatus   =   bfGroup.removeItem( item  ) ;
 
-       ```
+```
        
 ### 批量移除识别组静态业务下面安装位置
 
 
-      ```java
+```java
                   String secretId     = "secret id";
 		  String secretKey    = "secret key";
 		  String group_uuid   = "your group key";
@@ -360,12 +358,11 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 					removeList.add(bfItemList.get(1) ) ;
 		  boolean deleteStatus    =  bfGroup.removeItems( removeList  ) ; 
 
-       ```
+```
 
 ### 批量移除识别组动态安装位置
 
-    
-      ```java
+```java
                   String secretId     = "secret id";
 		  String secretKey    = "secret key";
 		  String group_uuid   = "your group key";
@@ -378,8 +375,7 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 					removeList.add(bfItemList.get(0) ) ;
 					removeList.add(bfItemList.get(1) ) ;
 		  boolean deleteStatus  =  bfGroup.removeItems( removeList  ) ; 
-
-       ```
+```
        
        
     
