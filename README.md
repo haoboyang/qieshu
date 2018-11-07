@@ -194,9 +194,9 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 
 ### 创建识别组 `group`
 ```java
-          String secretId     = "secret id" ;
-	  String secretKey    = "secret key" ;
-	  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
+          String     secretId     = "secret id" ;
+	  String     secretKey    = "secret key" ;
+	  BFOpenAPI  authManager  = createBFOpenAPInstance( secretId ,secretKey ) ;
 	 //创建识别组描述参数
 	  String groupName = "中兴路店" ;
           String address   = "中兴路373号" ;
