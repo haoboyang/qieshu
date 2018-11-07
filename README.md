@@ -237,7 +237,7 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 
           String secretId     = "secret id" ;
 	  String secretKey    = "secret key" ;
-          String group_uuid = "your group key" ;
+          String group_uuid   = "your group key" ;
 	  
 	  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
           BFGroup  bfGroup       = authManager.getGroup( group_uuid  ) ; 
@@ -250,10 +250,10 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 
 ### 修改识别组
 ```java
-          String secretId     = "secret id" ; 
-	  String secretKey    = "secret key" ;
-	  String group_uuid   = "your group key" ;
-	  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
+          String     secretId     = "secret id" ; 
+	  String     secretKey    = "secret key" ;
+	  String     group_uuid   = "your group key" ;
+	  BFOpenAPI  authManager  = createBFOpenAPInstance( secretId ,secretKey ) ;
 	 //创建识别组描述参数
 	  String groupName = "中兴路店" ;
           String address   = "中兴路373号" ;
@@ -262,7 +262,7 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
           String brand     = "百蝠" ; 
 	  try {
 	      BFGroup  bfGroup       = authManager.getGroup( group_uuid  ) ;
-	      boolean updateStatus = bfGroup.update(  groupName , address , province , city , brand  ) ;
+	      boolean updateStatus   = bfGroup.update(  groupName , address , province , city , brand  ) ;
 	  } catch (BFException e) {
             e.printStackTrace();
           } catch (ParseException e) {
@@ -294,7 +294,7 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 	          BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
 	          BFGroup    bfGroup     = authManager.getGroup( group_uuid  ) ;		
 		  BFApp      app         = authManager.getApp( appKey ) ;
-		  String downloadUrl = bfGroup.loginDynamicDevice( app ,yourDeviceSN  ,
+		  String downloadUrl     = bfGroup.loginDynamicDevice( app ,yourDeviceSN  ,
 		  yourDeviceType  ,CodeType.A ) ;
 		  System.out.println(  downloadUrl ) ;
 ```
@@ -336,8 +336,8 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 		  BFOpenAPI  authManager = createBFOpenAPInstance( secretId ,secretKey ) ;
                   BFGroup    bfGroup     = authManager.getGroup( group_uuid  ) ;
 		  BFPage<? extends BFItem> staticItemList = bfGroup.getItemList( itemName,pageNum ,limit ) ;
-		  BFItem item =staticItemList.getResultList().get(0) ;	
-		  boolean deleteStatus   =   bfGroup.removeItem( item  ) ;
+		  BFItem item                             = staticItemList.getResultList().get(0) ;	
+		  boolean deleteStatus                    = bfGroup.removeItem( item  ) ;
 
 ```
        
@@ -354,7 +354,7 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 		  List<BFItem> bfItemList = (List<BFItem>) staticItemList.getResultList() ;
 		  List<BFItem> removeList = new ArrayList<>() ;
 			       removeList.add(bfItemList.get(0) ) ;
-			removeList.add(bfItemList.get(1) ) ;
+			       removeList.add(bfItemList.get(1) ) ;
 		  boolean deleteStatus    =  bfGroup.removeItems( removeList  ) ; 
 
 ```
@@ -372,8 +372,8 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 		  BFPage<? extends BFDynamicDevice> dynamicList = bfGroup.getDynamicList(itemName ,pageNum , 		       limit ) ;
                   List<BFDynamicDevice> bfItemList = (List<BFDynamicDevice>) dynamicList.getResultList() ;
                   List<BFDynamicDevice> removeList = new ArrayList<>() ;
-					removeList.add(bfItemList.get(0) ) ;
-					removeList.add(bfItemList.get(1) ) ;
+					removeList.add( bfItemList.get(0) ) ;
+					removeList.add( bfItemList.get(1) ) ;
 		  boolean deleteStatus  =  bfGroup.removeItems( removeList  ) ; 
 ```
 
@@ -418,7 +418,7 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
 		  String appKey       = "other appKey" ；	        	
 		  BFOpenAPI  authManager    = createBFOpenAPInstance( secretId ,secretKey ) ;
                   BFGroup    bfGroup        = authManager.getGroup( group_uuid  ) ;
-                  boolean    deleteStauts  bfGroup.removeAuthorizedApp(appKey); 
+                  boolean    deleteStauts   = bfGroup.removeAuthorizedApp(appKey); 
 		   										      
 ```
 
@@ -463,7 +463,7 @@ Java SDK 属于箧书SDK之一，主要有如下功能：
          	  
 		  BFOpenAPI  authManager   = createBFOpenAPInstance( secretId ,secretKey ) ;
 		  BFItem     bfItem        = authManager.getBFItem(  item_uuid ) ;
-		  boolean updateStatus = bfItem.bindDeviceSN( deviceSN ) ;			
+		  boolean    updateStatus  = bfItem.bindDeviceSN( deviceSN ) ;			
 		  
 ```
 
