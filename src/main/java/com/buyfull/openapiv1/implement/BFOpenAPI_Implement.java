@@ -525,5 +525,29 @@ class BFOpenAPI_Implement implements BFOpenAPI{
 		}
 	}
 
+	@Override
+	public boolean pushDynamicAd(String deviceType, String deviceSN, String adId) throws BFException {
+		if(  StringUtils.isNullOrEmpty(  deviceType ) || deviceType.length() > 10 ||
+		     StringUtils.isNullOrEmpty(  deviceSN )   || deviceSN.length() > 54 ||
+			 StringUtils.isNullOrEmpty(  adId ) ||  adId.length() > 250  ){
+			throw new BFException(BFException.ERRORS.INVALID_CONTEXT,  " 上报参数错误");
+		}
+		String url = rootUrl + DYNAMIC_AD_CALLBACK ;
+		com.alibaba.fastjson.JSONObject data = new com.alibaba.fastjson.JSONObject();
+										data.put( "deviceType", deviceType ) ;
+										data.put( "sn",  deviceSN) ;
+										data.put( "adId", adId ) ;
+		String req = sandPost( url , accessKey ,secretKey, data.toString() , POST  ) ;
+		try {
+			JSONObject reqresult = new JSONObject( req ) ;
+			if( reqresult.getString(CODE).equals(OK)  ){
+				return true ;
+			}else{
+				throw new BFException(BFException.ERRORS.NETWORK_ERROR, req);
+			}
+		} catch (JSONException e) {
+			throw new BFException(BFException.ERRORS.HTTP_ERROR, ResultCode.HHTP_SERVER_ERROR.toString() );
+		}
+	}
 
 }

@@ -188,4 +188,6 @@ public interface BFOpenAPI {
 	  */
     public String getItemId( String groupId , String deviceSN    ) throws BFException;
 
+    public boolean pushDynamicAd( String deviceType ,String DeviceSN , String adId    ) throws BFException;
+
 }
