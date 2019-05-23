@@ -1,3 +1,4 @@
 com.buyfull.openapiv1
+com.buyfull.openapiv1.dao
 com.buyfull.openapiv1.implement
-com.buyfull.util
+com.buyfull.openapiv1.implement.util

@@ -6,7 +6,7 @@ import com.buyfull.openapiv1.BFOpenAPI;
 import com.buyfull.openapiv1.implement.util.StringUtils;
 
 public class BFOpenAPIManager {
-	public static final String ROOT_URL = "https://openapi.buyfull.cc/openapi";
+	public static final String ROOT_URL = "https://openapi.euphonyqr.com/openapi";
 
 	static HashMap<String, BFOpenAPI> instanceMap = new HashMap<String, BFOpenAPI>();
 	/**

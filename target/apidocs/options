@@ -15,10 +15,10 @@
 -docencoding
 'UTF-8'
 -doctitle
-'qieshu 1.3 API'
+'qieshu 2.1 API'
 -linkoffline
 'https://docs.oracle.com/javase/8/docs/api' '/Users/haobaoyang/git_req/qieshu/target/javadoc-bundle-options'
 -use
 -version
 -windowtitle
-'qieshu 1.3 API'
+'qieshu 2.1 API'
